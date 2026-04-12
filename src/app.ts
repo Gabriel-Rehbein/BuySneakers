@@ -1,26 +1,47 @@
-import express, { Request, Response } from 'express';
-import { produtoRotas } from './router/produto-router';
-import { ProdutoController } from './controller/produto-controller';
-import { ProdutoService } from './service/produto-service';
-import { ProdutoRepositoryMem } from './repository/produto-repository-mem';
+import express from "express";
+import { AppDataSource } from "./data-source";
+
+import { CategoriaRepository } from "./repository/categoria-repository";
+import { TenisRepository } from "./repository/tenis-repository";
+
+import { CategoriaService } from "./service/categoria-service";
+import { TenisService } from "./service/tenis-service";
+
+import { CategoriaController } from "./controller/categoria-controller";
+import { TenisController } from "./controller/tenis-controller";
+
+import { categoriaRotas } from "./router/categoria-router";
+import { tenisRotas } from "./router/tenis-router";
+
 const app = express();
 const port = 3000;
+
 app.use(express.json());
 
-app.get('/hello', (req: Request, res: Response) => {
- res.json({ message: "Hello World!!" });
-})
-
-app.use('/uploads', express.static('my-uploads'))
-
-
-//Inicializacao das dependencias
-const produtoRepository = new ProdutoRepositoryMem();
-const produtoService = new ProdutoService(produtoRepository);
-const produtoController = new ProdutoController(produtoService);
-
-app.use('/api/produtos', produtoRotas(produtoController))
-
-app.listen(port, () => {
- console.log(`Servidor rodando em http://localhost:${port}`);
+app.get("/hello", (_req, res) => {
+  res.status(200).json({ message: "BuySneakers API funcionando" });
 });
+
+AppDataSource.initialize()
+  .then(() => {
+    console.log("Banco conectado com sucesso.");
+
+    const categoriaRepository = new CategoriaRepository();
+    const tenisRepository = new TenisRepository();
+
+    const categoriaService = new CategoriaService(categoriaRepository);
+    const tenisService = new TenisService(tenisRepository, categoriaRepository);
+
+    const categoriaController = new CategoriaController(categoriaService);
+    const tenisController = new TenisController(tenisService);
+
+    app.use("/api/categorias", categoriaRotas(categoriaController));
+    app.use("/api/tenis", tenisRotas(tenisController));
+
+    app.listen(port, () => {
+      console.log(`Servidor BuySneakers rodando em http://localhost:${port}`);
+    });
+  })
+  .catch((erro) => {
+    console.error("Erro ao conectar no banco:", erro);
+  });
