@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne, OneToMany } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Usuario } from "./usuario";
 import { ItemPedido } from "./item-pedido";
 
@@ -10,6 +17,8 @@ export class Pedido {
   @ManyToOne(() => Usuario, (usuario) => usuario.pedidos, {
     nullable: false,
     eager: true,
+    onDelete: "RESTRICT",
+    onUpdate: "CASCADE",
   })
   usuario!: Usuario;
 
@@ -18,4 +27,10 @@ export class Pedido {
     eager: true,
   })
   itens: ItemPedido[] = [];
+
+  @Column("decimal", { precision: 10, scale: 2, default: 0 })
+  total!: number;
+
+  @CreateDateColumn({ name: "data_criacao" })
+  dataCriacao!: Date;
 }

@@ -28,18 +28,22 @@ export class CategoriaRepository {
   }
 
   async atualizar(id: number, dados: Partial<Categoria>): Promise<Categoria | null> {
-    const categoria = await this.buscarPorId(id);
-    if (!categoria) return null;
+    const categoriaExistente = await this.buscarPorId(id);
+    if (!categoriaExistente) {
+      return null;
+    }
 
-    Object.assign(categoria, dados);
-    return this.repository.save(categoria);
+    Object.assign(categoriaExistente, dados);
+    return this.repository.save(categoriaExistente);
   }
 
   async deletar(id: number): Promise<boolean> {
-    const categoria = await this.buscarPorId(id);
-    if (!categoria) return false;
+    const categoriaExistente = await this.buscarPorId(id);
+    if (!categoriaExistente) {
+      return false;
+    }
 
-    await this.repository.remove(categoria);
+    await this.repository.remove(categoriaExistente);
     return true;
   }
 }

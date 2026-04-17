@@ -1,343 +1,237 @@
 # 👟 BuySneakers API
 
-API RESTful desenvolvida em **Node.js + TypeScript + Express + TypeORM + PostgreSQL** para gerenciamento de uma loja de tênis.
+API RESTful desenvolvida com **Node.js + TypeScript + Express + TypeORM + PostgreSQL**, focada no gerenciamento completo de uma loja de tênis.
 
 ---
 
-## 🚀 Objetivo do Projeto
-
-Este projeto foi desenvolvido para atender aos requisitos do **Conceito C**, incluindo:
-
-* ✔ Dois CRUDs completos
-* ✔ Persistência de dados com banco real
-* ✔ Relacionamento entre entidades (Many-to-One)
-* ✔ Uso correto de API RESTful
-* ✔ Organização em camadas (Controller, Service, Repository)
-* ✔ Testes via Insomnia/Postman
-
----
-
-## 🧠 Entidades
-
-### 📦 Categoria
-
-* id
-* nome
-* descricao
-
-### 👟 Tênis
-
-* id
-* nome
-* marca
-* cor
-* preco
-* tamanho
-* estoque
-* categoria (relacionamento)
-
----
-
-## 🔗 Relacionamento
-
-* **Many-to-One**
-* Muitos tênis pertencem a uma categoria
-
----
-
-## 📁 Estrutura do Projeto
-
-```
-src/
-├── app.ts
-├── data-source.ts
-├── model/
-├── repository/
-├── service/
-├── controller/
-└── router/
-```
-
----
-
-## ⚙️ Tecnologias Utilizadas
+# 🚀 Tecnologias utilizadas
 
 * Node.js
 * TypeScript
 * Express
 * TypeORM
 * PostgreSQL
+* JWT (Autenticação)
+* Bcrypt (Criptografia)
+* Multer (Upload de imagens)
 
 ---
 
-## 📦 Instalação
+# 📦 Funcionalidades
 
-### 1. Clonar o projeto
+## 🔹 Categorias
 
-```bash
-git clone <seu-repositorio>
-cd buysneakers-api
+* Criar categoria
+* Listar categorias
+* Buscar por ID
+* Atualizar
+* Deletar
+
+## 🔹 Tênis
+
+* CRUD completo
+* Upload de imagem
+* Relacionamento com categoria
+
+## 🔹 Usuários
+
+* Cadastro de usuário
+* Login com JWT
+* Senha criptografada
+
+## 🔹 Pedidos (E-commerce)
+
+* Criar pedido
+* Cálculo automático de total
+* Controle de estoque
+* Listar pedidos
+* Listar pedidos do usuário
+
+---
+
+# 🔐 Autenticação
+
+A API utiliza **JWT**.
+
+### Login
+
+```http
+POST /api/auth/login
 ```
 
-### 2. Instalar dependências
+### Header necessário
+
+```http
+Authorization: Bearer SEU_TOKEN
+```
+
+---
+
+# 🖼️ Upload de imagem
+
+Endpoint:
+
+```http
+POST /api/tenis
+```
+
+Tipo:
+
+```http
+multipart/form-data
+```
+
+Campo:
+
+```txt
+imagem
+```
+
+As imagens ficam disponíveis em:
+
+```http
+http://localhost:3000/uploads/NOME_DA_IMAGEM
+```
+
+---
+
+# 🛒 Regras de negócio
+
+* Não permite estoque negativo
+* Não permite preço negativo
+* Não permite pedido sem itens
+* Não permite comprar mais que o estoque
+* Atualiza estoque automaticamente
+* Calcula total do pedido
+* Mantém histórico de preço no pedido
+
+---
+
+# ⚙️ Instalação
+
+## 1. Clonar o projeto
+
+```bash
+git clone https://github.com/Gabriel-Rehbein/BuySneakers.git
+cd BuySneakers
+```
+
+## 2. Instalar dependências
 
 ```bash
 npm install
 ```
 
-Caso necessário:
+## 3. Configurar banco
 
-```bash
-npm install express typeorm reflect-metadata pg
-npm install -D typescript ts-node-dev @types/node @types/express
-```
-
----
-
-## 🗄️ Banco de Dados
-
-Crie o banco no PostgreSQL:
-
-```sql
-CREATE DATABASE buysneakers;
-```
-
----
-
-## 🔧 Configuração
-
-Edite o arquivo `data-source.ts`:
+Edite o arquivo:
 
 ```ts
+src/data-source.ts
+```
+
+Configure:
+
+```ts
+host: "localhost",
+port: 5432,
 username: "postgres",
-password: "senacrs",
-database: "buysneakers"
+password: "sua_senha",
+database: "buysneakers",
 ```
 
 ---
 
-## ▶️ Como Rodar o Projeto
-
-### Modo desenvolvimento
-
-```bash
-npx ts-node-dev src/app.ts
-```
-
-ou
+## 4. Rodar o projeto
 
 ```bash
 npm run dev
 ```
 
----
+Servidor:
 
-## 🌐 Teste no Navegador
-
-Acesse:
-
-```
-http://localhost:3000/hello
-```
-
-Resposta esperada:
-
-```json
-{
-  "message": "BuySneakers API funcionando"
-}
+```txt
+http://localhost:3000
 ```
 
 ---
 
-## 🔥 Endpoints
+# 📡 Rotas principais
 
-### 📦 Categorias
+## 🔐 Auth
 
-#### Criar
+* POST `/api/auth/registrar`
+* POST `/api/auth/login`
 
-```
-POST /api/categorias
-```
+## 📦 Categorias
 
-```json
-{
-  "nome": "Corrida",
-  "descricao": "Tênis esportivos"
-}
-```
+* GET `/api/categorias`
+* GET `/api/categorias/:id`
+* POST `/api/categorias` 🔒
+* PUT `/api/categorias/:id` 🔒
+* DELETE `/api/categorias/:id` 🔒
 
----
+## 👟 Tênis
 
-#### Listar
+* GET `/api/tenis`
+* GET `/api/tenis/:id`
+* POST `/api/tenis` 🔒
+* PUT `/api/tenis/:id` 🔒
+* DELETE `/api/tenis/:id` 🔒
 
-```
-GET /api/categorias
-```
+## 🛒 Pedidos
 
----
-
-#### Buscar por ID
-
-```
-GET /api/categorias/1
-```
+* GET `/api/pedidos` 🔒
+* GET `/api/pedidos/meus` 🔒
+* GET `/api/pedidos/:id` 🔒
+* POST `/api/pedidos` 🔒
 
 ---
 
-#### Atualizar
+# 🧪 Testes (Opcional - Conceito A)
 
-```
-PUT /api/categorias/1
-```
-
----
-
-#### Deletar
-
-```
-DELETE /api/categorias/1
-```
-
----
-
-### 👟 Tênis
-
-#### Criar
-
-```
-POST /api/tenis
-```
-
-```json
-{
-  "nome": "Air Max",
-  "marca": "Nike",
-  "cor": "Preto",
-  "preco": 500,
-  "tamanho": 42,
-  "estoque": 5,
-  "categoriaId": 1
-}
-```
-
----
-
-#### Listar
-
-```
-GET /api/tenis
-```
-
----
-
-#### Buscar por ID
-
-```
-GET /api/tenis/1
-```
-
----
-
-#### Atualizar
-
-```
-PUT /api/tenis/1
-```
-
----
-
-#### Deletar
-
-```
-DELETE /api/tenis/1
-```
-
----
-
-## 🧪 Testes
-
-Utilize ferramentas como:
-
-* Insomnia
-* Postman
-
-Teste:
-
-* criação
-* listagem
-* busca
-* atualização
-* exclusão
-* erros (400 / 404)
-
----
-
-## 📌 Status Code Utilizados
-
-* `200` OK
-* `201` Criado
-* `204` Sem conteúdo
-* `400` Erro de validação
-* `404` Não encontrado
-* `500` Erro interno
-
----
-
-## 🧩 Funcionalidade com Duas Entidades
-
-Ao criar um tênis, é necessário informar:
-
-```
-categoriaId
-```
-
-Isso garante:
-
-* validação da categoria
-* relacionamento correto entre entidades
-
----
-
-## 🔄 Controle de Versão
-
-Utilize Git:
+Para rodar testes:
 
 ```bash
-git init
-git add .
-git commit -m "feat: inicialização do projeto BuySneakers"
+npm install -D jest ts-jest @types/jest
 ```
 
-Sugestões de commits:
+---
 
-* feat: CRUD categorias
-* feat: CRUD tenis
-* feat: relacionamento many-to-one
-* fix: validações
+# 🧠 Conceitos aplicados
+
+## ✔ Conceito C
+
+* CRUD completo
+* API REST
+* Status HTTP corretos
+* Arquitetura em camadas
+
+## ✔ Conceito B
+
+* Relacionamento entre entidades
+* Autenticação JWT
+* Segurança com bcrypt
+* Estrutura organizada
+
+## ✔ Conceito A
+
+* Upload de imagem (mídia)
+* Regras de negócio completas
+* Tratamento de erros
+* Sistema de pedidos (e-commerce)
 
 ---
 
-## 💡 Ideias para melhorias
+# 👨‍💻 Autor
 
-* Adicionar upload de imagem
-* Criar autenticação (login)
-* Paginação
-* Filtro por categoria
-* Controle de estoque automático
+Gabriel Menezes Rehbein
+Bruno Beheregaray
+GitHub: https://github.com/Gabriel-Rehbein
 
 ---
 
-## 👨‍💻 Autor
+# 📌 Status
 
-Gabriel
-
----
-
-## 📄 Licença
-
-Projeto acadêmico para fins educacionais.
-
-npm run dev
-
-npm install jsonwebtoken bcrypt
+✅ Projeto completo
+🔥 Nível: Conceito A

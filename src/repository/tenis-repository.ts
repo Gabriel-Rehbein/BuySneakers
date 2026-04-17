@@ -28,18 +28,22 @@ export class TenisRepository {
   }
 
   async atualizar(id: number, dados: Partial<Tenis>): Promise<Tenis | null> {
-    const tenis = await this.buscarPorId(id);
-    if (!tenis) return null;
+    const tenisExistente = await this.buscarPorId(id);
+    if (!tenisExistente) {
+      return null;
+    }
 
-    Object.assign(tenis, dados);
-    return this.repository.save(tenis);
+    Object.assign(tenisExistente, dados);
+    return this.repository.save(tenisExistente);
   }
 
   async deletar(id: number): Promise<boolean> {
-    const tenis = await this.buscarPorId(id);
-    if (!tenis) return false;
+    const tenisExistente = await this.buscarPorId(id);
+    if (!tenisExistente) {
+      return false;
+    }
 
-    await this.repository.remove(tenis);
+    await this.repository.remove(tenisExistente);
     return true;
   }
 }

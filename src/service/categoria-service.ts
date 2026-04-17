@@ -10,16 +10,26 @@ export class CategoriaService {
     }
   }
 
-  async inserir(categoria: Categoria): Promise<Categoria> {
-    if (!categoria?.nome?.trim()) {
+  private validarNome(nome: unknown): string {
+    if (typeof nome !== "string" || !nome.trim()) {
       throw new Error("400|Nome da categoria é obrigatório");
     }
 
-    if (categoria.descricao !== undefined && categoria.descricao !== null) {
-      categoria.descricao = categoria.descricao.trim();
+    return nome.trim();
+  }
+
+  private tratarDescricao(descricao?: string | null): string | null {
+    if (descricao === undefined || descricao === null) {
+      return null;
     }
 
-    categoria.nome = categoria.nome.trim();
+    const valor = descricao.trim();
+    return valor ? valor : null;
+  }
+
+  async inserir(categoria: Categoria): Promise<Categoria> {
+    categoria.nome = this.validarNome(categoria?.nome);
+    categoria.descricao = this.tratarDescricao(categoria?.descricao);
 
     return this.repository.inserir(categoria);
   }
@@ -44,23 +54,20 @@ export class CategoriaService {
     this.validarId(id);
 
     if (dados.nome !== undefined) {
-      if (!dados.nome.trim()) {
-        throw new Error("400|Nome inválido");
-      }
-      dados.nome = dados.nome.trim();
+      dados.nome = this.validarNome(dados.nome);
     }
 
-    if (dados.descricao !== undefined && dados.descricao !== null) {
-      dados.descricao = dados.descricao.trim();
+    if (dados.descricao !== undefined) {
+      dados.descricao = this.tratarDescricao(dados.descricao);
     }
 
-    const categoria = await this.repository.atualizar(id, dados);
+    const categoriaAtualizada = await this.repository.atualizar(id, dados);
 
-    if (!categoria) {
+    if (!categoriaAtualizada) {
       throw new Error("404|Categoria não encontrada");
     }
 
-    return categoria;
+    return categoriaAtualizada;
   }
 
   async deletar(id: number): Promise<void> {

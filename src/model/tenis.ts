@@ -1,4 +1,10 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Categoria } from "./categoria";
 
 @Entity("tenis")
@@ -23,6 +29,9 @@ export class Tenis {
 
   @Column("int")
   estoque!: number;
+
+  @Column({ name: "imagem_url", length: 255, nullable: true })
+  imagemUrl?: string | null;
 
   @ManyToOne(() => Categoria, (categoria) => categoria.tenis, {
     eager: true,

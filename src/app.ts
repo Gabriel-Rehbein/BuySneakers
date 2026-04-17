@@ -1,43 +1,76 @@
 import express from "express";
+import path from "path";
 import { AppDataSource } from "./data-source";
 
 import { CategoriaRepository } from "./repository/categoria-repository";
 import { TenisRepository } from "./repository/tenis-repository";
+import { UsuarioRepository } from "./repository/usuario-repository";
+import { PedidoRepository } from "./repository/pedido-repository";
 
 import { CategoriaService } from "./service/categoria-service";
 import { TenisService } from "./service/tenis-service";
+import { AuthService } from "./service/auth-service";
+import { PedidoService } from "./service/pedido-service";
 
 import { CategoriaController } from "./controller/categoria-controller";
 import { TenisController } from "./controller/tenis-controller";
+import { AuthController } from "./controller/auth-controller";
+import { PedidoController } from "./controller/pedido-controller";
 
 import { categoriaRotas } from "./router/categoria-router";
 import { tenisRotas } from "./router/tenis-router";
-import { authMiddleware } from "./middleware/auth-middleware";
+import { authRotas } from "./router/auth-router";
+import { pedidoRotas } from "./router/pedido-router";
 
 const app = express();
 const port = 3000;
 
 app.use(express.json());
 
+// servir arquivos de mídia
+app.use("/uploads", express.static(path.resolve(__dirname, "../uploads")));
+
 app.get("/hello", (_req, res) => {
-  res.status(200).json({ message: "BuySneakers API funcionando" });
+  res.status(200).json({
+    message: "BuySneakers API funcionando",
+    conceitos: ["C", "B", "A"],
+  });
 });
 
 AppDataSource.initialize()
   .then(() => {
     console.log("Banco conectado com sucesso.");
 
+    // repositories
     const categoriaRepository = new CategoriaRepository();
     const tenisRepository = new TenisRepository();
+    const usuarioRepository = new UsuarioRepository();
+    const pedidoRepository = new PedidoRepository();
 
+    // services
     const categoriaService = new CategoriaService(categoriaRepository);
-    const tenisService = new TenisService(tenisRepository, categoriaRepository);
+    const tenisService = new TenisService(
+      tenisRepository,
+      categoriaRepository
+    );
+    const authService = new AuthService(usuarioRepository);
+    const pedidoService = new PedidoService(
+      pedidoRepository,
+      usuarioRepository,
+      tenisRepository
+    );
 
+    // controllers
     const categoriaController = new CategoriaController(categoriaService);
     const tenisController = new TenisController(tenisService);
+    const authController = new AuthController(authService);
+    const pedidoController = new PedidoController(pedidoService);
 
+    // routes
+    app.use("/api/auth", authRotas(authController));
     app.use("/api/categorias", categoriaRotas(categoriaController));
-    app.use("/api/tenis", authMiddleware, tenisRotas(tenisController));
+    app.use("/api/tenis", tenisRotas(tenisController));
+    app.use("/api/pedidos", pedidoRotas(pedidoController));
 
     app.listen(port, () => {
       console.log(`Servidor BuySneakers rodando em http://localhost:${port}`);
@@ -45,4 +78,5 @@ AppDataSource.initialize()
   })
   .catch((erro) => {
     console.error("Erro ao conectar no banco:", erro);
+    process.exit(1);
   });

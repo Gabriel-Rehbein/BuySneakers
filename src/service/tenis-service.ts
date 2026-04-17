@@ -10,6 +10,7 @@ type TenisInput = {
   tamanho: number;
   estoque: number;
   categoriaId: number;
+  imagemUrl?: string | null;
 };
 
 export class TenisService {
@@ -24,29 +25,78 @@ export class TenisService {
     }
   }
 
-  async inserir(dados: TenisInput): Promise<Tenis> {
-    if (!dados?.nome?.trim()) throw new Error("400|Nome obrigatório");
-    if (!dados?.marca?.trim()) throw new Error("400|Marca obrigatória");
-    if (!dados?.cor?.trim()) throw new Error("400|Cor obrigatória");
-    if (dados.preco === undefined || dados.preco < 0) throw new Error("400|Preço inválido");
-    if (dados.tamanho === undefined || dados.tamanho <= 0) throw new Error("400|Tamanho inválido");
-    if (dados.estoque === undefined || dados.estoque < 0) throw new Error("400|Estoque inválido");
-    if (dados.categoriaId === undefined || dados.categoriaId <= 0) {
-      throw new Error("400|Categoria obrigatória");
+  private validarTexto(valor: unknown, nomeCampo: string): string {
+    if (typeof valor !== "string" || !valor.trim()) {
+      throw new Error(`400|${nomeCampo} obrigatório(a)`);
     }
 
-    const categoria = await this.categoriaRepository.buscarPorId(dados.categoriaId);
-    if (!categoria) throw new Error("404|Categoria não encontrada");
+    return valor.trim();
+  }
 
-    const tenis = Object.assign(new Tenis(), {
-      nome: dados.nome.trim(),
-      marca: dados.marca.trim(),
-      cor: dados.cor.trim(),
-      preco: dados.preco,
-      tamanho: dados.tamanho,
-      estoque: dados.estoque,
-      categoria
-    });
+  private validarPreco(preco: number): void {
+    if (preco === undefined || preco === null || isNaN(preco) || preco < 0) {
+      throw new Error("400|Preço inválido");
+    }
+  }
+
+  private validarTamanho(tamanho: number): void {
+    if (tamanho === undefined || tamanho === null || isNaN(tamanho) || tamanho <= 0) {
+      throw new Error("400|Tamanho inválido");
+    }
+  }
+
+  private validarEstoque(estoque: number): void {
+    if (estoque === undefined || estoque === null || isNaN(estoque) || estoque < 0) {
+      throw new Error("400|Estoque inválido");
+    }
+  }
+
+  private validarCategoriaId(categoriaId: number): void {
+    if (
+      categoriaId === undefined ||
+      categoriaId === null ||
+      !Number.isInteger(categoriaId) ||
+      categoriaId <= 0
+    ) {
+      throw new Error("400|Categoria obrigatória ou inválida");
+    }
+  }
+
+  private tratarImagemUrl(imagemUrl?: string | null): string | null {
+    if (imagemUrl === undefined) return null;
+    if (imagemUrl === null) return null;
+    if (typeof imagemUrl !== "string") {
+      throw new Error("400|Imagem inválida");
+    }
+
+    const valor = imagemUrl.trim();
+    return valor ? valor : null;
+  }
+
+  async inserir(dados: TenisInput): Promise<Tenis> {
+    const nome = this.validarTexto(dados?.nome, "Nome");
+    const marca = this.validarTexto(dados?.marca, "Marca");
+    const cor = this.validarTexto(dados?.cor, "Cor");
+
+    this.validarPreco(dados.preco);
+    this.validarTamanho(dados.tamanho);
+    this.validarEstoque(dados.estoque);
+    this.validarCategoriaId(dados.categoriaId);
+
+    const categoria = await this.categoriaRepository.buscarPorId(dados.categoriaId);
+    if (!categoria) {
+      throw new Error("404|Categoria não encontrada");
+    }
+
+    const tenis = new Tenis();
+    tenis.nome = nome;
+    tenis.marca = marca;
+    tenis.cor = cor;
+    tenis.preco = Number(dados.preco);
+    tenis.tamanho = Number(dados.tamanho);
+    tenis.estoque = Number(dados.estoque);
+    tenis.imagemUrl = this.tratarImagemUrl(dados.imagemUrl);
+    tenis.categoria = categoria;
 
     return this.tenisRepository.inserir(tenis);
   }
@@ -59,7 +109,9 @@ export class TenisService {
     this.validarId(id);
 
     const tenis = await this.tenisRepository.buscarPorId(id);
-    if (!tenis) throw new Error("404|Tênis não encontrado");
+    if (!tenis) {
+      throw new Error("404|Tênis não encontrado");
+    }
 
     return tenis;
   }
@@ -68,43 +120,48 @@ export class TenisService {
     this.validarId(id);
 
     const tenis = await this.tenisRepository.buscarPorId(id);
-    if (!tenis) throw new Error("404|Tênis não encontrado");
+    if (!tenis) {
+      throw new Error("404|Tênis não encontrado");
+    }
 
     if (dados.nome !== undefined) {
-      if (!dados.nome.trim()) throw new Error("400|Nome inválido");
-      tenis.nome = dados.nome.trim();
+      tenis.nome = this.validarTexto(dados.nome, "Nome");
     }
 
     if (dados.marca !== undefined) {
-      if (!dados.marca.trim()) throw new Error("400|Marca inválida");
-      tenis.marca = dados.marca.trim();
+      tenis.marca = this.validarTexto(dados.marca, "Marca");
     }
 
     if (dados.cor !== undefined) {
-      if (!dados.cor.trim()) throw new Error("400|Cor inválida");
-      tenis.cor = dados.cor.trim();
+      tenis.cor = this.validarTexto(dados.cor, "Cor");
     }
 
     if (dados.preco !== undefined) {
-      if (dados.preco < 0) throw new Error("400|Preço inválido");
-      tenis.preco = dados.preco;
+      this.validarPreco(dados.preco);
+      tenis.preco = Number(dados.preco);
     }
 
     if (dados.tamanho !== undefined) {
-      if (dados.tamanho <= 0) throw new Error("400|Tamanho inválido");
-      tenis.tamanho = dados.tamanho;
+      this.validarTamanho(dados.tamanho);
+      tenis.tamanho = Number(dados.tamanho);
     }
 
     if (dados.estoque !== undefined) {
-      if (dados.estoque < 0) throw new Error("400|Estoque inválido");
-      tenis.estoque = dados.estoque;
+      this.validarEstoque(dados.estoque);
+      tenis.estoque = Number(dados.estoque);
+    }
+
+    if (dados.imagemUrl !== undefined) {
+      tenis.imagemUrl = this.tratarImagemUrl(dados.imagemUrl);
     }
 
     if (dados.categoriaId !== undefined) {
-      if (dados.categoriaId <= 0) throw new Error("400|Categoria inválida");
+      this.validarCategoriaId(dados.categoriaId);
 
       const categoria = await this.categoriaRepository.buscarPorId(dados.categoriaId);
-      if (!categoria) throw new Error("404|Categoria não encontrada");
+      if (!categoria) {
+        throw new Error("404|Categoria não encontrada");
+      }
 
       tenis.categoria = categoria;
     }
@@ -122,6 +179,8 @@ export class TenisService {
     this.validarId(id);
 
     const removido = await this.tenisRepository.deletar(id);
-    if (!removido) throw new Error("404|Tênis não encontrado");
+    if (!removido) {
+      throw new Error("404|Tênis não encontrado");
+    }
   }
 }

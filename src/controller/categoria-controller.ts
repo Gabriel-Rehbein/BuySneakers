@@ -4,25 +4,49 @@ import { CategoriaService } from "../service/categoria-service";
 export class CategoriaController {
   constructor(private service: CategoriaService) {}
 
-  private tratarErro(res: Response, erro: any): void {
-    if (erro?.id || erro?.msg) {
-      res.status(erro.id || 500).json({
-        erro: erro.msg || "Erro interno no servidor",
+  private tratarErro(res: Response, erro: unknown): void {
+    if (
+      typeof erro === "object" &&
+      erro !== null &&
+      "id" in erro &&
+      "msg" in erro
+    ) {
+      const erroTipado = erro as { id?: number; msg?: string };
+
+      res.status(erroTipado.id || 500).json({
+        erro: erroTipado.msg || "Erro interno no servidor",
       });
       return;
     }
 
-    const [status, mensagem] = erro?.message?.split("|") || [];
-    res.status(Number(status) || 500).json({
-      erro: mensagem || "Erro interno no servidor",
+    if (erro instanceof Error) {
+      const [status, mensagem] = erro.message?.split("|") || [];
+      res.status(Number(status) || 500).json({
+        erro: mensagem || "Erro interno no servidor",
+      });
+      return;
+    }
+
+    res.status(500).json({
+      erro: "Erro interno no servidor",
     });
+  }
+
+  private validarId(id: number): void {
+    if (!Number.isInteger(id) || id <= 0) {
+      throw new Error("400|ID inválido");
+    }
   }
 
   inserir = async (req: Request, res: Response): Promise<void> => {
     try {
       const categoria = await this.service.inserir(req.body);
-      res.status(201).json(categoria);
-    } catch (erro: any) {
+
+      res.status(201).json({
+        mensagem: "Categoria cadastrada com sucesso",
+        dados: categoria,
+      });
+    } catch (erro: unknown) {
       this.tratarErro(res, erro);
     }
   };
@@ -30,35 +54,55 @@ export class CategoriaController {
   listar = async (_req: Request, res: Response): Promise<void> => {
     try {
       const categorias = await this.service.listar();
-      res.status(200).json(categorias);
-    } catch (erro: any) {
+
+      res.status(200).json({
+        quantidade: categorias.length,
+        dados: categorias,
+      });
+    } catch (erro: unknown) {
       this.tratarErro(res, erro);
     }
   };
 
   buscarPorId = async (req: Request, res: Response): Promise<void> => {
     try {
-      const categoria = await this.service.buscarPorId(Number(req.params.id));
-      res.status(200).json(categoria);
-    } catch (erro: any) {
+      const id = Number(req.params.id);
+      this.validarId(id);
+
+      const categoria = await this.service.buscarPorId(id);
+
+      res.status(200).json({
+        dados: categoria,
+      });
+    } catch (erro: unknown) {
       this.tratarErro(res, erro);
     }
   };
 
   atualizar = async (req: Request, res: Response): Promise<void> => {
     try {
-      const categoria = await this.service.atualizar(Number(req.params.id), req.body);
-      res.status(200).json(categoria);
-    } catch (erro: any) {
+      const id = Number(req.params.id);
+      this.validarId(id);
+
+      const categoria = await this.service.atualizar(id, req.body);
+
+      res.status(200).json({
+        mensagem: "Categoria atualizada com sucesso",
+        dados: categoria,
+      });
+    } catch (erro: unknown) {
       this.tratarErro(res, erro);
     }
   };
 
   deletar = async (req: Request, res: Response): Promise<void> => {
     try {
-      await this.service.deletar(Number(req.params.id));
+      const id = Number(req.params.id);
+      this.validarId(id);
+
+      await this.service.deletar(id);
       res.status(204).send();
-    } catch (erro: any) {
+    } catch (erro: unknown) {
       this.tratarErro(res, erro);
     }
   };
