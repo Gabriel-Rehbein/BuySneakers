@@ -12,6 +12,8 @@ export class Categoria {
   @Column({ length: 255, nullable: true })
   descricao?: string;
 
-  @OneToMany(() => Tenis, (tenis) => tenis.categoria)
-  tenis!: Tenis[];
+  @OneToMany(() => Tenis, (tenis) => tenis.categoria, {
+    cascade: false,
+  })
+  tenis: Tenis[] = [];
 }

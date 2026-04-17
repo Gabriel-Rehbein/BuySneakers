@@ -10,15 +10,21 @@ export class TenisRepository {
   }
 
   async inserir(tenis: Tenis): Promise<Tenis> {
-    return await this.repository.save(tenis);
+    return this.repository.save(tenis);
   }
 
   async listar(): Promise<Tenis[]> {
-    return await this.repository.find();
+    return this.repository.find({
+      relations: ["categoria"],
+      order: { id: "ASC" },
+    });
   }
 
   async buscarPorId(id: number): Promise<Tenis | null> {
-    return await this.repository.findOne({ where: { id } });
+    return this.repository.findOne({
+      where: { id },
+      relations: ["categoria"],
+    });
   }
 
   async atualizar(id: number, dados: Partial<Tenis>): Promise<Tenis | null> {
@@ -26,7 +32,7 @@ export class TenisRepository {
     if (!tenis) return null;
 
     Object.assign(tenis, dados);
-    return await this.repository.save(tenis);
+    return this.repository.save(tenis);
   }
 
   async deletar(id: number): Promise<boolean> {

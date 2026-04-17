@@ -1,31 +1,33 @@
 {
+  "name": "buysneakers",
+  "version": "1.0.0",
+  "description": "API RESTful desenvolvida em Node.js + TypeScript + Express + TypeORM + PostgreSQL para gerenciamento de uma loja de tênis.",
+  "main": "dist/app.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
+    "build": "tsc",
+    "start": "node dist/app.js"
+  },
   "dependencies": {
-    "express": "^4.21.2",
+    "bcrypt": "^6.0.0",
+    "express": "^4.22.1",
+    "jsonwebtoken": "^9.0.3",
     "pg": "^8.20.0",
     "reflect-metadata": "^0.2.2",
     "typeorm": "^0.3.28"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/express": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^22.19.17",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.7.2"
   },
-  "name": "buysneakers",
-  "version": "1.0.0",
-  "description": "API RESTful desenvolvida em **Node.js + TypeScript + Express + TypeORM + PostgreSQL** para gerenciamento de uma loja de tênis.",
-  "main": "index.js",
-  "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/app.ts"
-  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Gabriel-Rehbein/BuySneakers.git"
+    "url": "https://github.com/Gabriel-Rehbein/BuySneakers.git"
   },
   "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Gabriel-Rehbein/BuySneakers/issues"
-  },
-  "homepage": "https://github.com/Gabriel-Rehbein/BuySneakers#readme"
+  "license": "ISC"
 }

@@ -10,15 +10,18 @@ export class CategoriaRepository {
   }
 
   async inserir(categoria: Categoria): Promise<Categoria> {
-    return await this.repository.save(categoria);
+    return this.repository.save(categoria);
   }
 
   async listar(): Promise<Categoria[]> {
-    return await this.repository.find({ relations: ["tenis"] });
+    return this.repository.find({
+      relations: ["tenis"],
+      order: { id: "ASC" },
+    });
   }
 
   async buscarPorId(id: number): Promise<Categoria | null> {
-    return await this.repository.findOne({
+    return this.repository.findOne({
       where: { id },
       relations: ["tenis"],
     });
@@ -29,7 +32,7 @@ export class CategoriaRepository {
     if (!categoria) return null;
 
     Object.assign(categoria, dados);
-    return await this.repository.save(categoria);
+    return this.repository.save(categoria);
   }
 
   async deletar(id: number): Promise<boolean> {

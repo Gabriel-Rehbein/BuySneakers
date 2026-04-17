@@ -27,6 +27,8 @@ export class Tenis {
   @ManyToOne(() => Categoria, (categoria) => categoria.tenis, {
     eager: true,
     nullable: false,
+    onDelete: "RESTRICT",
+    onUpdate: "CASCADE",
   })
   @JoinColumn({ name: "categoria_id" })
   categoria!: Categoria;

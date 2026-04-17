@@ -339,3 +339,5 @@ Gabriel
 Projeto acadêmico para fins educacionais.
 
 npm run dev
+
+npm install jsonwebtoken bcrypt

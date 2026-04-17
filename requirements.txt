@@ -1,0 +1,6 @@
+express
+typeorm
+pg
+reflect-metadata
+jsonwebtoken
+bcrypt

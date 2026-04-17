@@ -12,6 +12,7 @@ import { TenisController } from "./controller/tenis-controller";
 
 import { categoriaRotas } from "./router/categoria-router";
 import { tenisRotas } from "./router/tenis-router";
+import { authMiddleware } from "./middleware/auth-middleware";
 
 const app = express();
 const port = 3000;
@@ -36,7 +37,7 @@ AppDataSource.initialize()
     const tenisController = new TenisController(tenisService);
 
     app.use("/api/categorias", categoriaRotas(categoriaController));
-    app.use("/api/tenis", tenisRotas(tenisController));
+    app.use("/api/tenis", authMiddleware, tenisRotas(tenisController));
 
     app.listen(port, () => {
       console.log(`Servidor BuySneakers rodando em http://localhost:${port}`);
