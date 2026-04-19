@@ -1,0 +1,72 @@
+Instalar.txt - instruções de instalação do projeto
+
+LICENSE - licença do projeto
+
+package.json - arquivo de configuração e dependências do projeto Node.js
+
+README.md - explicação do repositório
+
+requirements.txt - dependências para Python (possivelmente para scripts auxiliares)
+
+Rodar.md - instruções para executar o projeto
+
+tsconfig.json - configuração do TypeScript
+
+src/app.ts - ponto de entrada da aplicação
+
+src/data-source.ts - configuração da fonte de dados (banco de dados)
+
+src/controller/auth-controller.ts - controlador responsável pela autenticação de usuários
+
+src/controller/categoria-controller.ts - controlador para gerenciar categorias de produtos
+
+src/controller/pedido-controller.ts - controlador para gerenciar pedidos
+
+src/controller/tenis-controller.ts - controlador para gerenciar tênis (produtos)
+
+src/middleware/auth-middleware.ts - middleware para autenticação de requisições
+
+src/middleware/auth-service.ts - serviço auxiliar para autenticação (nota: há também um auth-service.ts em service/)
+
+src/middleware/upload-middleware.ts - middleware para upload de arquivos
+
+src/model/categoria.ts - modelo de dados para categorias
+
+src/model/item-pedido.ts - modelo de dados para itens de pedido
+
+src/model/pedido.ts - modelo de dados para pedidos
+
+src/model/tenis.ts - modelo de dados para tênis
+
+src/model/usuario.ts - modelo de dados para usuários
+
+src/repository/categoria-repository.ts - repositório para operações de banco de dados de categorias
+
+src/repository/pedido-repository.ts - repositório para operações de banco de dados de pedidos
+
+src/repository/tenis-repository.ts - repositório para operações de banco de dados de tênis
+
+src/repository/usuario-repository.ts - repositório para operações de banco de dados de usuários
+
+src/router/auth-router.ts - roteador para rotas de autenticação
+
+src/router/categoria-router.ts - roteador para rotas de categorias
+
+src/router/pedido-router.ts - roteador para rotas de pedidos
+
+src/router/tenis-router.ts - roteador para rotas de tênis
+
+src/service/auth-service.ts - serviço de lógica de negócio para autenticação
+
+src/service/categoria-service.ts - serviço de lógica de negócio para categorias
+
+src/service/pedido-service.ts - serviço de lógica de negócio para pedidos
+
+src/service/tenis-service.ts - serviço de lógica de negócio para tênis
+
+uploads/ - diretório para armazenar arquivos enviados (uploads)
+
+Este projeto é uma aplicação de e-commerce para compra de tênis, desenvolvida em 
+Node.js com TypeScript. Inclui funcionalidades de autenticação de usuários, 
+gerenciamento de categorias de produtos, pedidos e tênis, com suporte a 
+upload de arquivos e operações de banco de dados.

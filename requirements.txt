@@ -7,7 +7,6 @@ bcrypt
 multer
 typescript
 ts-node-dev
-@types/node
 @types/express
 @types/jsonwebtoken
 @types/bcrypt
