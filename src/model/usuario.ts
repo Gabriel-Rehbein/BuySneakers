@@ -16,5 +16,5 @@ export class Usuario {
   senha!: string;
 
   @OneToMany(() => Pedido, (pedido) => pedido.usuario)
-  pedidos: Pedido[] = [];
+  pedidos?: Pedido[];
 }

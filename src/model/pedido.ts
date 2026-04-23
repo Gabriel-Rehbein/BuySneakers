@@ -26,7 +26,7 @@ export class Pedido {
     cascade: true,
     eager: true,
   })
-  itens: ItemPedido[] = [];
+  itens?: ItemPedido[];
 
   @Column("decimal", { precision: 10, scale: 2, default: 0 })
   total!: number;

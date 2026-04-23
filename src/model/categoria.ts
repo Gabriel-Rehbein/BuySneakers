@@ -15,5 +15,5 @@ export class Categoria {
   @OneToMany(() => Tenis, (tenis) => tenis.categoria, {
     cascade: false,
   })
-  tenis: Tenis[] = [];
+  tenis?: Tenis[];
 }

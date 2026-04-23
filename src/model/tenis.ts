@@ -31,8 +31,8 @@ export class Tenis {
   estoque!: number;
 
   @Column({ name: "imagem_url", length: 255, nullable: true })
-  imagemUrl?: string | null;
-
+  imagemUrl?: string;
+  
   @ManyToOne(() => Categoria, (categoria) => categoria.tenis, {
     eager: true,
     nullable: false,
