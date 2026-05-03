@@ -1,3 +1,8 @@
+import "reflect-metadata";
+import dotenv from "dotenv";
+
+dotenv.config();
+
 import express from "express";
 import path from "path";
 import { AppDataSource } from "./data-source";
