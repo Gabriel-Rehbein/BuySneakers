@@ -72,4 +72,42 @@ export class PedidoController {
       this.tratarErro(res, erro);
     }
   };
+
+  atualizar = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const id = Number(req.params.id);
+      const pedido = await this.service.atualizar(id, req.body);
+
+      res.status(200).json({
+        mensagem: "Pedido atualizado com sucesso",
+        dados: pedido,
+      });
+    } catch (erro) {
+      this.tratarErro(res, erro);
+    }
+  };
+
+  partialUpdate = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const id = Number(req.params.id);
+      const pedido = await this.service.atualizar(id, req.body);
+
+      res.status(200).json({
+        mensagem: "Pedido atualizado parcialmente com sucesso",
+        dados: pedido,
+      });
+    } catch (erro) {
+      this.tratarErro(res, erro);
+    }
+  };
+
+  deletar = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const id = Number(req.params.id);
+      await this.service.deletar(id);
+      res.status(204).send();
+    } catch (erro) {
+      this.tratarErro(res, erro);
+    }
+  };
 }

@@ -25,6 +25,13 @@ export const tenisRotas = (controller: TenisController): Router => {
     controller.atualizar.bind(controller)
   );
 
+  router.patch(
+    "/:id",
+    authMiddleware,
+    upload.single("imagem"),
+    controller.partialUpdate.bind(controller)
+  );
+
   router.delete(
     "/:id",
     authMiddleware,

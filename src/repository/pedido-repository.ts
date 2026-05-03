@@ -36,4 +36,23 @@ export class PedidoRepository {
       order: { id: "DESC" },
     });
   }
+
+  async atualizar(id: number, dados: Partial<Pedido>): Promise<Pedido> {
+    const pedidoExistente = await this.buscarPorId(id);
+    if (!pedidoExistente) {
+      throw new Error("404|Pedido não encontrado");
+    }
+
+    Object.assign(pedidoExistente, dados);
+    return this.repository.save(pedidoExistente);
+  }
+
+  async deletar(id: number): Promise<void> {
+    const pedidoExistente = await this.buscarPorId(id);
+    if (!pedidoExistente) {
+      throw new Error("404|Pedido não encontrado");
+    }
+
+    await this.repository.remove(pedidoExistente);
+  }
 }

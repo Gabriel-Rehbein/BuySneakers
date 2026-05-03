@@ -95,6 +95,22 @@ export class CategoriaController {
     }
   };
 
+  partialUpdate = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const id = Number(req.params.id);
+      this.validarId(id);
+
+      const categoria = await this.service.atualizar(id, req.body);
+
+      res.status(200).json({
+        mensagem: "Categoria atualizada parcialmente com sucesso",
+        dados: categoria,
+      });
+    } catch (erro: unknown) {
+      this.tratarErro(res, erro);
+    }
+  };
+
   deletar = async (req: Request, res: Response): Promise<void> => {
     try {
       const id = Number(req.params.id);

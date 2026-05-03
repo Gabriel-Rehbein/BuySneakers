@@ -114,6 +114,23 @@ export class TenisController {
     }
   };
 
+  partialUpdate = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const id = Number(req.params.id);
+      this.validarId(id);
+
+      const payload = this.montarPayload(req);
+      const tenis = await this.service.atualizar(id, payload as any);
+
+      res.status(200).json({
+        mensagem: "Tênis atualizado parcialmente com sucesso",
+        dados: tenis,
+      });
+    } catch (erro: unknown) {
+      this.tratarErro(res, erro);
+    }
+  };
+
   deletar = async (req: Request, res: Response): Promise<void> => {
     try {
       const id = Number(req.params.id);

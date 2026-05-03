@@ -18,13 +18,13 @@ export class CategoriaService {
     return nome.trim();
   }
 
-  private tratarDescricao(descricao?: string | null): string | null {
+  private tratarDescricao(descricao?: string | null): string | undefined {
     if (descricao === undefined || descricao === null) {
-      return null;
+      return undefined;
     }
 
     const valor = descricao.trim();
-    return valor ? valor : null;
+    return valor ? valor : undefined;
   }
 
   async inserir(categoria: Categoria): Promise<Categoria> {

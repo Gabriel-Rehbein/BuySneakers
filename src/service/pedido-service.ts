@@ -98,4 +98,27 @@ export class PedidoService {
     this.validarId(usuarioId, "Usuário");
     return this.pedidoRepository.listarPorUsuario(usuarioId);
   }
+
+  async atualizar(id: number, dados: Partial<Pedido>): Promise<Pedido> {
+    this.validarId(id, "Pedido");
+
+    const pedidoExistente = await this.buscarPorId(id);
+
+    // Para simplicidade, permitir atualizar apenas campos simples, não itens
+    if (dados.total !== undefined || dados.itens !== undefined) {
+      throw new Error("400|Não é possível atualizar total ou itens do pedido");
+    }
+
+    Object.assign(pedidoExistente, dados);
+    return this.pedidoRepository.atualizar(id, pedidoExistente);
+  }
+
+  async deletar(id: number): Promise<void> {
+    this.validarId(id, "Pedido");
+
+    const pedido = await this.buscarPorId(id);
+
+    // Talvez restaurar estoque, mas para simplicidade, apenas deletar
+    await this.pedidoRepository.deletar(id);
+  }
 }

@@ -62,15 +62,15 @@ export class TenisService {
     }
   }
 
-  private tratarImagemUrl(imagemUrl?: string | null): string | null {
-    if (imagemUrl === undefined) return null;
-    if (imagemUrl === null) return null;
+  private tratarImagemUrl(imagemUrl?: string | null): string | undefined {
+    if (imagemUrl === undefined) return undefined;
+    if (imagemUrl === null) return undefined;
     if (typeof imagemUrl !== "string") {
       throw new Error("400|Imagem inválida");
     }
 
     const valor = imagemUrl.trim();
-    return valor ? valor : null;
+    return valor ? valor : undefined;
   }
 
   async inserir(dados: TenisInput): Promise<Tenis> {

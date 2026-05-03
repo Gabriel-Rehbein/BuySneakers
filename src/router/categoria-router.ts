@@ -12,6 +12,7 @@ export const categoriaRotas = (controller: CategoriaController): Router => {
   // 🔐 Protegido
   router.post("/", authMiddleware, controller.inserir.bind(controller));
   router.put("/:id", authMiddleware, controller.atualizar.bind(controller));
+  router.patch("/:id", authMiddleware, controller.partialUpdate.bind(controller));
   router.delete("/:id", authMiddleware, controller.deletar.bind(controller));
 
   return router;
