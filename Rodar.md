@@ -23,24 +23,20 @@ npm install
 Abra o arquivo:
 
 ```txt
-src/data-source.ts
+.env
 ```
 
 Configure conforme seu PostgreSQL:
 
-```ts
-host: "localhost",
-port: 5432,
-username: "postgres",
-password: "sua_senha",
-database: "buysneakers",
+```env
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=sua_senha
+DB_NAME=buysneakers
 ```
 
-Crie o banco no PostgreSQL:
-
-```sql
-CREATE DATABASE buysneakers;
-```
+O projeto usa TypeORM para criar automaticamente o banco `DB_NAME`, caso ele ainda não exista, e também cria/atualiza as tabelas com `synchronize: true`.
 
 ---
 
@@ -99,7 +95,7 @@ npm install
 
 * Verifique se o PostgreSQL está rodando
 * Verifique usuário/senha
-* Verifique se o banco existe
+* Verifique se o usuário do PostgreSQL tem permissão para criar banco
 
 ### ❌ Porta ocupada
 

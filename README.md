@@ -126,19 +126,21 @@ npm install
 
 Edite o arquivo:
 
-```ts
-src/data-source.ts
+```txt
+.env
 ```
 
 Configure:
 
-```ts
-host: "localhost",
-port: 5432,
-username: "postgres",
-password: "sua_senha",
-database: "buysneakers",
+```env
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=sua_senha
+DB_NAME=buysneakers
 ```
+
+O TypeORM cria automaticamente o banco configurado em `DB_NAME`, caso ele ainda não exista, e cria/atualiza as tabelas com `synchronize: true`.
 
 ---
 
