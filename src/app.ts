@@ -29,6 +29,10 @@ import { pedidoRotas } from "./router/pedido-router";
 
 const app = express();
 const port = 3000;
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+];
 
 function tratarErroGlobal(
   erro: unknown,
@@ -56,6 +60,25 @@ function tratarErroGlobal(
 
   res.status(500).json({ erro: "Erro interno no servidor" });
 }
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+
+  if (origin && allowedOrigins.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
+    res.header("Vary", "Origin");
+  }
+
+  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type,Authorization");
+
+  if (req.method === "OPTIONS") {
+    res.sendStatus(204);
+    return;
+  }
+
+  next();
+});
 
 app.use(express.json());
 

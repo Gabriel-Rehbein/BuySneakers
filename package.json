@@ -5,7 +5,10 @@
   "main": "dist/app.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
+    "dev:api": "ts-node-dev --respawn --transpile-only src/app.ts",
+    "dev:front": "npm --prefix frontend run dev",
     "build": "tsc",
+    "build:front": "npm --prefix frontend run build",
     "start": "node dist/app.js"
   },
   "dependencies": {
