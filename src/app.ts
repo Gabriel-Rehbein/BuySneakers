@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import path from "path";
 import { AppDataSource } from "./data-source";
 
@@ -29,6 +29,33 @@ import { pedidoRotas } from "./router/pedido-router";
 
 const app = express();
 const port = 3000;
+
+function tratarErroGlobal(
+  erro: unknown,
+  _req: Request,
+  res: Response,
+  next: NextFunction
+): void {
+  if (res.headersSent) {
+    next(erro);
+    return;
+  }
+
+  if (erro instanceof SyntaxError) {
+    res.status(400).json({ erro: "JSON inválido" });
+    return;
+  }
+
+  if (erro instanceof Error) {
+    const [status, mensagem] = erro.message?.split("|") || [];
+    res.status(Number(status) || 500).json({
+      erro: mensagem || "Erro interno no servidor",
+    });
+    return;
+  }
+
+  res.status(500).json({ erro: "Erro interno no servidor" });
+}
 
 app.use(express.json());
 
@@ -76,6 +103,7 @@ AppDataSource.initialize()
     app.use("/api/categorias", categoriaRotas(categoriaController));
     app.use("/api/tenis", tenisRotas(tenisController));
     app.use("/api/pedidos", pedidoRotas(pedidoController));
+    app.use(tratarErroGlobal);
 
     app.listen(port, () => {
       console.log(`Servidor BuySneakers rodando em http://localhost:${port}`);

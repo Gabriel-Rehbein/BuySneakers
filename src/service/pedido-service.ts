@@ -116,7 +116,7 @@ export class PedidoService {
   async deletar(id: number): Promise<void> {
     this.validarId(id, "Pedido");
 
-    const pedido = await this.buscarPorId(id);
+    await this.buscarPorId(id);
 
     // Talvez restaurar estoque, mas para simplicidade, apenas deletar
     await this.pedidoRepository.deletar(id);
