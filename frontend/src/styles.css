@@ -312,6 +312,24 @@ h1 {
   outline: 3px solid rgba(36, 107, 95, 0.15);
 }
 
+.field-error {
+  color: #842029;
+  font-size: 0.88rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.table-action-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 .status {
   display: flex;
   align-items: flex-start;

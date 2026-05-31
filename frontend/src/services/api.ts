@@ -42,6 +42,11 @@ export async function listarCategorias() {
   return response.dados;
 }
 
+export async function buscarCategoriaPorId(id: number) {
+  const response = await request<ApiSingleResponse<Categoria>>(`/categorias/${id}`);
+  return response.dados;
+}
+
 export async function criarCategoria(
   token: string,
   dados: { nome: string; descricao?: string }
@@ -55,6 +60,31 @@ export async function criarCategoria(
   });
 
   return response.dados;
+}
+
+export async function atualizarCategoria(
+  token: string,
+  id: number,
+  dados: { nome: string; descricao?: string }
+) {
+  const response = await request<ApiSingleResponse<Categoria>>(`/categorias/${id}`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(dados),
+  });
+
+  return response.dados;
+}
+
+export async function deletarCategoria(token: string, id: number) {
+  await request<void>(`/categorias/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 }
 
 export async function registrarUsuario(dados: {

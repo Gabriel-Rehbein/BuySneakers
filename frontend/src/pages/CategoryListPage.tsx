@@ -1,12 +1,16 @@
 import { RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { CategoryCard } from "../components/CategoryCard";
 import { CategoryTable } from "../components/CategoryTable";
 import { StatusMessage } from "../components/StatusMessage";
-import { listarCategorias } from "../services/api";
+import { deletarCategoria, listarCategorias } from "../services/api";
+import { useAuth } from "../context/AuthContext";
 import type { Categoria } from "../services/api";
 
 export function CategoryListPage() {
+  const { token, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [erro, setErro] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -25,29 +29,25 @@ export function CategoryListPage() {
     }
   }
 
+  async function handleDeleteCategoria(categoria: Categoria) {
+    if (!window.confirm(`Deseja excluir a categoria “${categoria.nome}”?`)) {
+      return;
+    }
+
+    setIsLoading(true);
+    setErro("");
+
+    try {
+      await deletarCategoria(token, categoria.id);
+      await carregarCategorias();
+    } catch (error) {
+      setErro(error instanceof Error ? error.message : "Erro ao excluir categoria");
+      setIsLoading(false);
+    }
+  }
+
   useEffect(() => {
-    let ativo = true;
-
-    listarCategorias()
-      .then((dados) => {
-        if (ativo) {
-          setCategorias(dados);
-        }
-      })
-      .catch((error) => {
-        if (ativo) {
-          setErro(error instanceof Error ? error.message : "Erro ao listar categorias");
-        }
-      })
-      .finally(() => {
-        if (ativo) {
-          setIsLoading(false);
-        }
-      });
-
-    return () => {
-      ativo = false;
-    };
+    carregarCategorias();
   }, []);
 
   return (
@@ -57,7 +57,7 @@ export function CategoryListPage() {
           <p className="eyebrow">GET /api/categorias</p>
           <h1>Categorias cadastradas</h1>
           <p className="page-description">
-            Dados buscados da API e apresentados em tabela e cards, cobrindo a parte de listagem do Conceito C.
+            Dados buscados da API e apresentados em tabela e cards. A lista agora suporta edição e exclusão de categorias.
           </p>
         </div>
 
@@ -67,6 +67,8 @@ export function CategoryListPage() {
         </button>
       </section>
 
+      {erro && <StatusMessage type="error">{erro}</StatusMessage>}
+
       <div className="split-grid">
         <section className="panel">
           <div className="panel-header">
@@ -74,7 +76,11 @@ export function CategoryListPage() {
             <span className="muted">{isLoading ? "Carregando..." : `${categorias.length} itens`}</span>
           </div>
 
-          {erro ? <StatusMessage type="error">{erro}</StatusMessage> : <CategoryTable categorias={categorias} />}
+          <CategoryTable
+            categorias={categorias}
+            onEdit={(categoria) => navigate(`/categorias/${categoria.id}/editar`)}
+            onDelete={isAuthenticated ? handleDeleteCategoria : undefined}
+          />
         </section>
 
         <aside>
