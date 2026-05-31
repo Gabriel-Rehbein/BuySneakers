@@ -4,6 +4,33 @@ export type Categoria = {
   descricao?: string | null;
 };
 
+export type Tenis = {
+  id: number;
+  nome: string;
+  marca: string;
+  cor: string;
+  preco: number | string;
+  tamanho: number;
+  estoque: number;
+  imagemUrl?: string | null;
+  categoria: Categoria;
+};
+
+export type ItemPedido = {
+  id: number;
+  quantidade: number;
+  precoUnitario: number | string;
+  subtotal: number | string;
+  tenis: Tenis;
+};
+
+export type Pedido = {
+  id: number;
+  total: number | string;
+  dataCriacao: string;
+  itens?: ItemPedido[];
+};
+
 type ApiListResponse<T> = {
   quantidade: number;
   dados: T[];
@@ -15,14 +42,19 @@ type ApiSingleResponse<T> = {
 };
 
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3000/api";
+export const API_BASE_URL = API_URL.replace(/\/api\/?$/, "");
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
+  const isFormData = options.body instanceof FormData;
+  const headers = new Headers(options.headers);
+
+  if (!isFormData && !headers.has("Content-Type")) {
+    headers.set("Content-Type", "application/json");
+  }
+
   const response = await fetch(`${API_URL}${path}`, {
     ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...options.headers,
-    },
+    headers,
   });
 
   const contentType = response.headers.get("content-type") ?? "";
@@ -85,6 +117,48 @@ export async function deletarCategoria(token: string, id: number) {
       Authorization: `Bearer ${token}`,
     },
   });
+}
+
+export async function listarTenis() {
+  const response = await request<ApiListResponse<Tenis>>("/tenis");
+  return response.dados;
+}
+
+export async function criarTenis(token: string, dados: FormData) {
+  const response = await request<ApiSingleResponse<Tenis>>("/tenis", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: dados,
+  });
+
+  return response.dados;
+}
+
+export async function criarPedido(
+  token: string,
+  itens: Array<{ tenisId: number; quantidade: number }>
+) {
+  const response = await request<ApiSingleResponse<Pedido>>("/pedidos", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ itens }),
+  });
+
+  return response.dados;
+}
+
+export async function listarMeusPedidos(token: string) {
+  const response = await request<ApiListResponse<Pedido>>("/pedidos/meus", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.dados;
 }
 
 export async function registrarUsuario(dados: {

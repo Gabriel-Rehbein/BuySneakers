@@ -5,6 +5,8 @@ import { AuthPage } from "./pages/AuthPage";
 import { CategoryCreatePage } from "./pages/CategoryCreatePage";
 import { CategoryEditPage } from "./pages/CategoryEditPage";
 import { CategoryListPage } from "./pages/CategoryListPage";
+import { SneakerCreatePage } from "./pages/SneakerCreatePage";
+import { StorePage } from "./pages/StorePage";
 import "./styles.css";
 
 export default function App() {
@@ -13,7 +15,9 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route element={<AppLayout />}>
-            <Route path="/" element={<Navigate to="/categorias" replace />} />
+            <Route path="/" element={<Navigate to="/loja" replace />} />
+            <Route path="/loja" element={<StorePage />} />
+            <Route path="/tenis/novo" element={<SneakerCreatePage />} />
             <Route path="/categorias" element={<CategoryListPage />} />
             <Route path="/categorias/nova" element={<CategoryCreatePage />} />
             <Route path="/categorias/:id/editar" element={<CategoryEditPage />} />
