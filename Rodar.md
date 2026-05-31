@@ -79,6 +79,15 @@ npm install
 npm run dev
 ```
 
+## 7. Login padrão
+
+O backend cria automaticamente um usuário padrão na primeira inicialização:
+
+- E-mail: `admin@buysneakers.com`
+- Senha: `admin123`
+
+Use esse usuário para acessar a área de cadastro e o dashboard de relatórios.
+
 ## 7. Resumo rapido
 
 Backend:

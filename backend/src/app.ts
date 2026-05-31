@@ -5,7 +5,7 @@ dotenv.config();
 
 import express, { NextFunction, Request, Response } from "express";
 import path from "path";
-import { AppDataSource, criarBancoSeNaoExistir } from "./data-source";
+import { AppDataSource, criarBancoSeNaoExistir, inicializarDadosIniciais } from "./data-source";
 
 import { CategoriaRepository } from "./repository/categoria-repository";
 import { TenisRepository } from "./repository/tenis-repository";
@@ -94,6 +94,7 @@ app.get("/hello", (_req, res) => {
 
 criarBancoSeNaoExistir()
   .then(() => AppDataSource.initialize())
+  .then(() => inicializarDadosIniciais())
   .then(() => {
     console.log("Banco conectado.");
 

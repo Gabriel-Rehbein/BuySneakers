@@ -99,6 +99,9 @@ export function StorePage() {
           </p>
         </div>
         <div className="hero-actions">
+          <Link className="secondary-button" to="/dashboard">
+            Relatórios
+          </Link>
           <Link className="secondary-button" to="/tenis/novo">
             Cadastrar tênis
           </Link>

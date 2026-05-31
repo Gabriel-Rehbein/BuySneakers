@@ -1,4 +1,4 @@
-import { Footprints, LogOut, Plus, ShieldCheck, ShoppingBag, Tags } from "lucide-react";
+import { BarChart3, Footprints, LogOut, Plus, ShieldCheck, ShoppingBag, Tags } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
@@ -22,6 +22,10 @@ export function AppLayout() {
           <NavLink to="/loja" className="nav-link">
             <ShoppingBag size={18} aria-hidden="true" />
             Loja
+          </NavLink>
+          <NavLink to="/dashboard" className="nav-link">
+            <BarChart3 size={18} aria-hidden="true" />
+            Relatórios
           </NavLink>
           <NavLink to="/tenis/novo" className="nav-link">
             <Footprints size={18} aria-hidden="true" />
