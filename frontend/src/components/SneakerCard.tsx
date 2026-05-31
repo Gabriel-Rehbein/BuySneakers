@@ -35,7 +35,14 @@ export function SneakerCard({
 
   return (
     <article className="sneaker-card">
-      <img className="sneaker-image" src={getImageUrl(tenis.imagemUrl)} alt={tenis.nome} />
+      <img
+        className="sneaker-image"
+        src={getImageUrl(tenis.imagemUrl)}
+        alt={tenis.nome}
+        onError={(event) => {
+          event.currentTarget.src = fallbackImage;
+        }}
+      />
       <div className="sneaker-body">
         <div>
           <p className="eyebrow">{tenis.categoria?.nome ?? "Sem categoria"}</p>

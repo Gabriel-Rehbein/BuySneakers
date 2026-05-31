@@ -1,4 +1,4 @@
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, Search, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { SneakerCard } from "../components/SneakerCard";
@@ -22,11 +22,24 @@ export function StorePage() {
   const [erro, setErro] = useState("");
   const [mensagem, setMensagem] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [termoBusca, setTermoBusca] = useState("");
 
   const totalEstoque = useMemo(
     () => tenis.reduce((total, item) => total + item.estoque, 0),
     [tenis]
   );
+
+  const tenisFiltrados = useMemo(() => {
+    const termoNormalizado = termoBusca.trim().toLocaleLowerCase("pt-BR");
+
+    if (!termoNormalizado) {
+      return tenis;
+    }
+
+    return tenis.filter((produto) =>
+      produto.nome.toLocaleLowerCase("pt-BR").includes(termoNormalizado)
+    );
+  }, [tenis, termoBusca]);
 
   async function carregarDados() {
     setIsLoading(true);
@@ -143,8 +156,47 @@ export function StorePage() {
         </section>
       )}
 
+      {!isLoading && tenis.length > 0 && (
+        <section className="search-panel" aria-label="Pesquisar tenis">
+          <div className="search-field">
+            <Search size={20} aria-hidden="true" />
+            <label className="sr-only" htmlFor="busca-tenis">
+              Pesquisar tenis por nome
+            </label>
+            <input
+              id="busca-tenis"
+              type="search"
+              placeholder="Pesquisar por nome do tenis"
+              value={termoBusca}
+              onChange={(event) => setTermoBusca(event.target.value)}
+            />
+            {termoBusca && (
+              <button
+                className="icon-button"
+                type="button"
+                title="Limpar pesquisa"
+                onClick={() => setTermoBusca("")}
+              >
+                <X size={16} aria-hidden="true" />
+              </button>
+            )}
+          </div>
+          <span className="search-count">
+            {tenisFiltrados.length} de {tenis.length} produtos
+          </span>
+        </section>
+      )}
+
+      {!isLoading && tenis.length > 0 && tenisFiltrados.length === 0 && (
+        <section className="panel">
+          <div className="empty-state">
+            Nenhum tenis encontrado com esse nome.
+          </div>
+        </section>
+      )}
+
       <div className="sneaker-grid">
-        {tenis.map((produto) => (
+        {tenisFiltrados.map((produto) => (
           <SneakerCard
             key={produto.id}
             tenis={produto}

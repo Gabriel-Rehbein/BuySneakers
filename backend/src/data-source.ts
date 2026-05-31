@@ -84,6 +84,9 @@ export async function inicializarDadosIniciais(): Promise<void> {
     categoriasSalvas.push(categoria);
   }
 
+  const criarImagemTenis = (photoId: string) =>
+    `https://images.unsplash.com/photo-${photoId}?auto=format&fit=crop&w=640&q=80`;
+
   const tenisIniciais = [
     {
       nome: "Speed Runner",
@@ -92,7 +95,7 @@ export async function inicializarDadosIniciais(): Promise<void> {
       preco: 449.9,
       tamanho: 42,
       estoque: 18,
-      imagemUrl: "https://via.placeholder.com/450x300?text=Speed+Runner",
+      imagemUrl: criarImagemTenis("1542291026-7eec264c27ff"),
       categoriaNome: "Corrida",
     },
     {
@@ -102,7 +105,7 @@ export async function inicializarDadosIniciais(): Promise<void> {
       preco: 399.9,
       tamanho: 40,
       estoque: 15,
-      imagemUrl: "https://via.placeholder.com/450x300?text=Air+Motion",
+      imagemUrl: criarImagemTenis("1549298916-b41d501d3772"),
       categoriaNome: "Corrida",
     },
     {
@@ -112,7 +115,7 @@ export async function inicializarDadosIniciais(): Promise<void> {
       preco: 379.9,
       tamanho: 43,
       estoque: 12,
-      imagemUrl: "https://via.placeholder.com/450x300?text=Court+Pro",
+      imagemUrl: criarImagemTenis("1608231387042-66d1773070a5"),
       categoriaNome: "Basquete",
     },
     {
@@ -122,7 +125,7 @@ export async function inicializarDadosIniciais(): Promise<void> {
       preco: 489.9,
       tamanho: 44,
       estoque: 8,
-      imagemUrl: "https://via.placeholder.com/450x300?text=Sky+Dunk",
+      imagemUrl: criarImagemTenis("1606107557195-0e29a4b5b4aa"),
       categoriaNome: "Basquete",
     },
     {
@@ -132,7 +135,7 @@ export async function inicializarDadosIniciais(): Promise<void> {
       preco: 259.9,
       tamanho: 41,
       estoque: 22,
-      imagemUrl: "https://via.placeholder.com/450x300?text=City+Walk",
+      imagemUrl: criarImagemTenis("1525966222134-fcfa99b8ae77"),
       categoriaNome: "Casual",
     },
     {
@@ -142,7 +145,7 @@ export async function inicializarDadosIniciais(): Promise<void> {
       preco: 219.9,
       tamanho: 40,
       estoque: 19,
-      imagemUrl: "https://via.placeholder.com/450x300?text=Street+Classic",
+      imagemUrl: criarImagemTenis("1491553895911-0055eca6402d"),
       categoriaNome: "Casual",
     },
     {
@@ -152,7 +155,7 @@ export async function inicializarDadosIniciais(): Promise<void> {
       preco: 299.9,
       tamanho: 42,
       estoque: 10,
-      imagemUrl: "https://via.placeholder.com/450x300?text=Ramp+Skate",
+      imagemUrl: criarImagemTenis("1460353581641-37baddab0fa2"),
       categoriaNome: "Skate",
     },
     {
@@ -162,7 +165,7 @@ export async function inicializarDadosIniciais(): Promise<void> {
       preco: 329.9,
       tamanho: 43,
       estoque: 9,
-      imagemUrl: "https://via.placeholder.com/450x300?text=Board+Master",
+      imagemUrl: criarImagemTenis("1520256862855-398228c41684"),
       categoriaNome: "Skate",
     },
     {
@@ -172,7 +175,7 @@ export async function inicializarDadosIniciais(): Promise<void> {
       preco: 349.9,
       tamanho: 44,
       estoque: 13,
-      imagemUrl: "https://via.placeholder.com/450x300?text=Power+Lift",
+      imagemUrl: criarImagemTenis("1515955656352-a1fa3ffcd111"),
       categoriaNome: "Treino",
     },
     {
@@ -182,7 +185,7 @@ export async function inicializarDadosIniciais(): Promise<void> {
       preco: 369.9,
       tamanho: 42,
       estoque: 14,
-      imagemUrl: "https://via.placeholder.com/450x300?text=Gym+Flex",
+      imagemUrl: criarImagemTenis("1556906781-9a412961c28c"),
       categoriaNome: "Treino",
     },
     {
@@ -192,7 +195,7 @@ export async function inicializarDadosIniciais(): Promise<void> {
       preco: 429.9,
       tamanho: 43,
       estoque: 11,
-      imagemUrl: "https://via.placeholder.com/450x300?text=Trail+Blaze",
+      imagemUrl: criarImagemTenis("1539185441755-769473a23570"),
       categoriaNome: "Trilha",
     },
     {
@@ -202,7 +205,7 @@ export async function inicializarDadosIniciais(): Promise<void> {
       preco: 459.9,
       tamanho: 45,
       estoque: 10,
-      imagemUrl: "https://via.placeholder.com/450x300?text=Mountain+Track",
+      imagemUrl: criarImagemTenis("1521093470119-a3acdc43374a"),
       categoriaNome: "Trilha",
     },
     {
@@ -212,7 +215,7 @@ export async function inicializarDadosIniciais(): Promise<void> {
       preco: 329.9,
       tamanho: 41,
       estoque: 20,
-      imagemUrl: "https://via.placeholder.com/450x300?text=Urban+Life",
+      imagemUrl: criarImagemTenis("1543508282-6319a3e2621f"),
       categoriaNome: "Lifestyle",
     },
     {
@@ -222,7 +225,7 @@ export async function inicializarDadosIniciais(): Promise<void> {
       preco: 339.9,
       tamanho: 42,
       estoque: 17,
-      imagemUrl: "https://via.placeholder.com/450x300?text=City+Pulse",
+      imagemUrl: criarImagemTenis("1595950653106-6c9ebd614d3a"),
       categoriaNome: "Lifestyle",
     },
     {
@@ -232,7 +235,7 @@ export async function inicializarDadosIniciais(): Promise<void> {
       preco: 419.9,
       tamanho: 44,
       estoque: 12,
-      imagemUrl: "https://via.placeholder.com/450x300?text=Trail+Guard",
+      imagemUrl: criarImagemTenis("1600185365483-26d7a4cc7519"),
       categoriaNome: "Outdoor",
     },
     {
@@ -242,7 +245,7 @@ export async function inicializarDadosIniciais(): Promise<void> {
       preco: 439.9,
       tamanho: 43,
       estoque: 11,
-      imagemUrl: "https://via.placeholder.com/450x300?text=Outdoor+Prime",
+      imagemUrl: criarImagemTenis("1529810313688-44ea1c2d81d3"),
       categoriaNome: "Outdoor",
     },
     {
@@ -252,7 +255,7 @@ export async function inicializarDadosIniciais(): Promise<void> {
       preco: 389.9,
       tamanho: 42,
       estoque: 16,
-      imagemUrl: "https://via.placeholder.com/450x300?text=Net+Spike",
+      imagemUrl: criarImagemTenis("1543163521-1bf539c55dd2"),
       categoriaNome: "Voleibol",
     },
     {
@@ -262,7 +265,7 @@ export async function inicializarDadosIniciais(): Promise<void> {
       preco: 399.9,
       tamanho: 44,
       estoque: 15,
-      imagemUrl: "https://via.placeholder.com/450x300?text=Volley+Speed",
+      imagemUrl: criarImagemTenis("1514989940723-e8e51635b782"),
       categoriaNome: "Voleibol",
     },
     {
@@ -272,7 +275,7 @@ export async function inicializarDadosIniciais(): Promise<void> {
       preco: 319.9,
       tamanho: 41,
       estoque: 18,
-      imagemUrl: "https://via.placeholder.com/450x300?text=Futsal+Pro",
+      imagemUrl: criarImagemTenis("1551107696-a4b0c5a0d9a2"),
       categoriaNome: "Futsal",
     },
     {
@@ -282,7 +285,7 @@ export async function inicializarDadosIniciais(): Promise<void> {
       preco: 349.9,
       tamanho: 42,
       estoque: 14,
-      imagemUrl: "https://via.placeholder.com/450x300?text=Indoor+Turbo",
+      imagemUrl: criarImagemTenis("1587563871167-1ee9c731aefb"),
       categoriaNome: "Futsal",
     },
   ];
@@ -292,15 +295,15 @@ export async function inicializarDadosIniciais(): Promise<void> {
       where: { nome: tenisData.nome },
     });
 
+    const categoria = categoriasSalvas.find(
+      (categoriaSalva) => categoriaSalva.nome === tenisData.categoriaNome
+    );
+
+    if (!categoria) {
+      continue;
+    }
+
     if (!tenisExistente) {
-      const categoria = categoriasSalvas.find(
-        (categoriaSalva) => categoriaSalva.nome === tenisData.categoriaNome
-      );
-
-      if (!categoria) {
-        continue;
-      }
-
       const tenis = tenisRepository.create({
         nome: tenisData.nome,
         marca: tenisData.marca,
@@ -313,6 +316,16 @@ export async function inicializarDadosIniciais(): Promise<void> {
       });
 
       await tenisRepository.save(tenis);
+      continue;
+    }
+
+    if (
+      !tenisExistente.imagemUrl ||
+      tenisExistente.imagemUrl.includes("via.placeholder.com")
+    ) {
+      tenisExistente.imagemUrl = tenisData.imagemUrl;
+      tenisExistente.categoria = categoria;
+      await tenisRepository.save(tenisExistente);
     }
   }
 
