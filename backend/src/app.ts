@@ -95,7 +95,7 @@ app.get("/hello", (_req, res) => {
 criarBancoSeNaoExistir()
   .then(() => AppDataSource.initialize())
   .then(() => {
-    console.log("Banco conectado com sucesso.");
+    console.log("Banco conectado.");
 
     // repositories
     const categoriaRepository = new CategoriaRepository();
@@ -130,10 +130,10 @@ criarBancoSeNaoExistir()
     app.use(tratarErroGlobal);
 
     app.listen(port, () => {
-      console.log(`Servidor BuySneakers rodando em http://localhost:${port}`);
+      console.log(`API rodando em http://localhost:${port}`);
     });
   })
   .catch((erro) => {
-    console.error("Erro ao conectar no banco:", erro);
+    console.error("Erro ao conectar no banco.");
     process.exit(1);
   });

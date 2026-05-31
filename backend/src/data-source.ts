@@ -43,7 +43,7 @@ export async function criarBancoSeNaoExistir(): Promise<void> {
       await conexaoAdministrativa.query(
         `CREATE DATABASE ${escaparIdentificadorPostgres(DB_NAME)}`
       );
-      console.log(`Banco "${DB_NAME}" criado com sucesso.`);
+      console.log("Banco criado.");
     }
   } finally {
     await conexaoAdministrativa.destroy();
@@ -59,5 +59,5 @@ export const AppDataSource = new DataSource({
   database: DB_NAME,
   entities: [Categoria, Tenis, Usuario, Pedido, ItemPedido],
   synchronize: true,
-  logging: true,
+  logging: false,
 });

@@ -1,6 +1,6 @@
-# 🚀 Como rodar o projeto BuySneakers
+# Como rodar o projeto BuySneakers
 
-## 1. Abrar o projeto
+## 1. Abrir o projeto
 
 No terminal, entre na pasta:
 
@@ -8,22 +8,22 @@ No terminal, entre na pasta:
 cd BuySneakers
 ```
 
----
+## 2. Rodar o backend
 
-## 2. Instalar dependências
+O backend agora fica dentro da pasta `backend`.
 
 ```bash
+cd backend
 npm install
+npm run dev
 ```
-
----
 
 ## 3. Configurar o banco de dados
 
 Abra o arquivo:
 
 ```txt
-.env
+backend/.env
 ```
 
 Configure conforme seu PostgreSQL:
@@ -36,19 +36,9 @@ DB_PASSWORD=sua_senha
 DB_NAME=buysneakers
 ```
 
-O projeto usa TypeORM para criar automaticamente o banco `DB_NAME`, caso ele ainda não exista, e também cria/atualiza as tabelas com `synchronize: true`.
+O projeto usa TypeORM para criar automaticamente o banco `DB_NAME`, caso ele ainda nao exista, e tambem cria/atualiza as tabelas com `synchronize: true`.
 
----
-
-## 4. Rodar o projeto
-
-```bash
-npm run dev
-```
-
----
-
-## 5. Testar se está funcionando
+## 4. Testar se esta funcionando
 
 Abra no navegador:
 
@@ -65,14 +55,12 @@ Resposta esperada:
 }
 ```
 
----
+## 5. Upload de imagens
 
-## 6. Upload de imagens
-
-As imagens ficam em:
+As imagens do backend ficam em:
 
 ```txt
-uploads/
+backend/uploads/
 ```
 
 E podem ser acessadas por:
@@ -81,41 +69,30 @@ E podem ser acessadas por:
 http://localhost:3000/uploads/nome-da-imagem
 ```
 
----
+## 6. Rodar o frontend
 
-## 7. Problemas comuns
-
-### ❌ Erro de dependências
+Em outro terminal, a partir da raiz do projeto:
 
 ```bash
-npm install
-```
-
-### ❌ Erro de banco
-
-* Verifique se o PostgreSQL está rodando
-* Verifique usuário/senha
-* Verifique se o usuário do PostgreSQL tem permissão para criar banco
-
-### ❌ Porta ocupada
-
-Altere no `app.ts`:
-
-```ts
-const port = 3000;
-```
-
----
-
-## 8. Resumo rápido
-
-```bash
+cd frontend
 npm install
 npm run dev
 ```
 
----
+## 7. Resumo rapido
 
-## ✅ Pronto!
+Backend:
 
-Agora a API está rodando 🚀
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+Frontend:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```

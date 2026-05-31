@@ -1,72 +1,74 @@
-Instalar.txt - instruções de instalação do projeto
+Instalar.txt - instrucoes de instalacao do projeto
 
-LICENSE - licença do projeto
+LICENSE - licenca do projeto
 
-package.json - arquivo de configuração e dependências do projeto Node.js
+README.md - explicacao do repositorio
 
-README.md - explicação do repositório
+Rodar.md - instrucoes para executar o projeto
 
-requirements.txt - dependências para Python (possivelmente para scripts auxiliares)
+backend/package.json - arquivo de configuracao e dependencias do backend Node.js
 
-Rodar.md - instruções para executar o projeto
+backend/requirements.txt - dependencias auxiliares listadas para o backend
 
-tsconfig.json - configuração do TypeScript
+backend/tsconfig.json - configuracao do TypeScript do backend
 
-src/app.ts - ponto de entrada da aplicação
+backend/src/app.ts - ponto de entrada da aplicacao
 
-src/data-source.ts - configuração da fonte de dados (banco de dados)
+backend/src/data-source.ts - configuracao da fonte de dados (banco de dados)
 
-src/controller/auth-controller.ts - controlador responsável pela autenticação de usuários
+backend/src/controller/auth-controller.ts - controlador responsavel pela autenticacao de usuarios
 
-src/controller/categoria-controller.ts - controlador para gerenciar categorias de produtos
+backend/src/controller/categoria-controller.ts - controlador para gerenciar categorias de produtos
 
-src/controller/pedido-controller.ts - controlador para gerenciar pedidos
+backend/src/controller/pedido-controller.ts - controlador para gerenciar pedidos
 
-src/controller/tenis-controller.ts - controlador para gerenciar tênis (produtos)
+backend/src/controller/tenis-controller.ts - controlador para gerenciar tenis (produtos)
 
-src/middleware/auth-middleware.ts - middleware para autenticação de requisições
+backend/src/middleware/auth-middleware.ts - middleware para autenticacao de requisicoes
 
-src/middleware/auth-service.ts - serviço auxiliar para autenticação (nota: há também um auth-service.ts em service/)
+backend/src/middleware/auth-service.ts - servico auxiliar para autenticacao
 
-src/middleware/upload-middleware.ts - middleware para upload de arquivos
+backend/src/middleware/upload-middleware.ts - middleware para upload de arquivos
 
-src/model/categoria.ts - modelo de dados para categorias
+backend/src/model/categoria.ts - modelo de dados para categorias
 
-src/model/item-pedido.ts - modelo de dados para itens de pedido
+backend/src/model/item-pedido.ts - modelo de dados para itens de pedido
 
-src/model/pedido.ts - modelo de dados para pedidos
+backend/src/model/pedido.ts - modelo de dados para pedidos
 
-src/model/tenis.ts - modelo de dados para tênis
+backend/src/model/tenis.ts - modelo de dados para tenis
 
-src/model/usuario.ts - modelo de dados para usuários
+backend/src/model/usuario.ts - modelo de dados para usuarios
 
-src/repository/categoria-repository.ts - repositório para operações de banco de dados de categorias
+backend/src/repository/categoria-repository.ts - repositorio para operacoes de banco de dados de categorias
 
-src/repository/pedido-repository.ts - repositório para operações de banco de dados de pedidos
+backend/src/repository/pedido-repository.ts - repositorio para operacoes de banco de dados de pedidos
 
-src/repository/tenis-repository.ts - repositório para operações de banco de dados de tênis
+backend/src/repository/tenis-repository.ts - repositorio para operacoes de banco de dados de tenis
 
-src/repository/usuario-repository.ts - repositório para operações de banco de dados de usuários
+backend/src/repository/usuario-repository.ts - repositorio para operacoes de banco de dados de usuarios
 
-src/router/auth-router.ts - roteador para rotas de autenticação
+backend/src/router/auth-router.ts - roteador para rotas de autenticacao
 
-src/router/categoria-router.ts - roteador para rotas de categorias
+backend/src/router/categoria-router.ts - roteador para rotas de categorias
 
-src/router/pedido-router.ts - roteador para rotas de pedidos
+backend/src/router/pedido-router.ts - roteador para rotas de pedidos
 
-src/router/tenis-router.ts - roteador para rotas de tênis
+backend/src/router/tenis-router.ts - roteador para rotas de tenis
 
-src/service/auth-service.ts - serviço de lógica de negócio para autenticação
+backend/src/service/auth-service.ts - servico de logica de negocio para autenticacao
 
-src/service/categoria-service.ts - serviço de lógica de negócio para categorias
+backend/src/service/categoria-service.ts - servico de logica de negocio para categorias
 
-src/service/pedido-service.ts - serviço de lógica de negócio para pedidos
+backend/src/service/pedido-service.ts - servico de logica de negocio para pedidos
 
-src/service/tenis-service.ts - serviço de lógica de negócio para tênis
+backend/src/service/tenis-service.ts - servico de logica de negocio para tenis
 
-uploads/ - diretório para armazenar arquivos enviados (uploads)
+backend/uploads/ - diretorio para armazenar arquivos enviados
 
-Este projeto é uma aplicação de e-commerce para compra de tênis, desenvolvida em 
-Node.js com TypeScript. Inclui funcionalidades de autenticação de usuários, 
-gerenciamento de categorias de produtos, pedidos e tênis, com suporte a 
-upload de arquivos e operações de banco de dados.
+frontend/ - aplicacao web do projeto
+
+Este projeto e uma aplicacao de e-commerce para compra de tenis, desenvolvida em
+Node.js com TypeScript no backend. Inclui funcionalidades de autenticacao de
+usuarios, gerenciamento de categorias de produtos, pedidos e tenis, com suporte a
+upload de arquivos e operacoes de banco de dados.

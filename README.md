@@ -1,25 +1,28 @@
-# 👟 BuySneakers API
+# BuySneakers API
 
-API RESTful desenvolvida com **Node.js + TypeScript + Express + TypeORM + PostgreSQL**, focada no gerenciamento completo de uma loja de tênis.
+API RESTful desenvolvida com **Node.js + TypeScript + Express + TypeORM + PostgreSQL**, focada no gerenciamento completo de uma loja de tenis.
 
----
+## Estrutura
 
-# 🚀 Tecnologias utilizadas
+```txt
+backend/   API Node.js + TypeScript
+frontend/  Aplicacao web
+```
+
+## Tecnologias utilizadas
 
 * Node.js
 * TypeScript
 * Express
 * TypeORM
 * PostgreSQL
-* JWT (Autenticação)
-* Bcrypt (Criptografia)
-* Multer (Upload de imagens)
+* JWT
+* Bcrypt
+* Multer
 
----
+## Funcionalidades
 
-# 📦 Funcionalidades
-
-## 🔹 Categorias
+### Categorias
 
 * Criar categoria
 * Listar categorias
@@ -27,47 +30,43 @@ API RESTful desenvolvida com **Node.js + TypeScript + Express + TypeORM + Postgr
 * Atualizar
 * Deletar
 
-## 🔹 Tênis
+### Tenis
 
 * CRUD completo
 * Upload de imagem
 * Relacionamento com categoria
 
-## 🔹 Usuários
+### Usuarios
 
-* Cadastro de usuário
+* Cadastro de usuario
 * Login com JWT
 * Senha criptografada
 
-## 🔹 Pedidos (E-commerce)
+### Pedidos
 
 * Criar pedido
-* Cálculo automático de total
+* Calculo automatico de total
 * Controle de estoque
 * Listar pedidos
-* Listar pedidos do usuário
+* Listar pedidos do usuario
 
----
-
-# 🔐 Autenticação
+## Autenticacao
 
 A API utiliza **JWT**.
 
-### Login
+Login:
 
 ```http
 POST /api/auth/login
 ```
 
-### Header necessário
+Header necessario:
 
 ```http
 Authorization: Bearer SEU_TOKEN
 ```
 
----
-
-# 🖼️ Upload de imagem
+## Upload de imagem
 
 Endpoint:
 
@@ -87,50 +86,41 @@ Campo:
 imagem
 ```
 
-As imagens ficam disponíveis em:
+As imagens ficam disponiveis em:
 
 ```http
 http://localhost:3000/uploads/NOME_DA_IMAGEM
 ```
 
----
+No projeto, elas sao armazenadas em:
 
-# 🛒 Regras de negócio
+```txt
+backend/uploads/
+```
 
-* Não permite estoque negativo
-* Não permite preço negativo
-* Não permite pedido sem itens
-* Não permite comprar mais que o estoque
-* Atualiza estoque automaticamente
-* Calcula total do pedido
-* Mantém histórico de preço no pedido
+## Instalacao
 
----
-
-# ⚙️ Instalação
-
-## 1. Clonar o projeto
+Clone o projeto:
 
 ```bash
 git clone https://github.com/Gabriel-Rehbein/BuySneakers.git
 cd BuySneakers
 ```
 
-## 2. Instalar dependências
+Instale as dependencias do backend:
 
 ```bash
+cd backend
 npm install
 ```
 
-## 3. Configurar banco
-
-Edite o arquivo:
+Configure o banco no arquivo:
 
 ```txt
-.env
+backend/.env
 ```
 
-Configure:
+Exemplo:
 
 ```env
 DB_HOST=localhost
@@ -140,13 +130,14 @@ DB_PASSWORD=sua_senha
 DB_NAME=buysneakers
 ```
 
-O TypeORM cria automaticamente o banco configurado em `DB_NAME`, caso ele ainda não exista, e cria/atualiza as tabelas com `synchronize: true`.
+O TypeORM cria automaticamente o banco configurado em `DB_NAME`, caso ele ainda nao exista, e cria/atualiza as tabelas com `synchronize: true`.
 
----
+## Rodar o projeto
 
-## 4. Rodar o projeto
+Backend:
 
 ```bash
+cd backend
 npm run dev
 ```
 
@@ -156,84 +147,56 @@ Servidor:
 http://localhost:3000
 ```
 
----
+Frontend:
 
-# 📡 Rotas principais
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-## 🔐 Auth
+## Rotas principais
+
+### Auth
 
 * POST `/api/auth/registrar`
 * POST `/api/auth/login`
 
-## 📦 Categorias
+### Categorias
 
 * GET `/api/categorias`
 * GET `/api/categorias/:id`
-* POST `/api/categorias` 🔒
-* PUT `/api/categorias/:id` 🔒
-* DELETE `/api/categorias/:id` 🔒
+* POST `/api/categorias`
+* PUT `/api/categorias/:id`
+* DELETE `/api/categorias/:id`
 
-## 👟 Tênis
+### Tenis
 
 * GET `/api/tenis`
 * GET `/api/tenis/:id`
-* POST `/api/tenis` 🔒
-* PUT `/api/tenis/:id` 🔒
-* DELETE `/api/tenis/:id` 🔒
+* POST `/api/tenis`
+* PUT `/api/tenis/:id`
+* DELETE `/api/tenis/:id`
 
-## 🛒 Pedidos
+### Pedidos
 
-* GET `/api/pedidos` 🔒
-* GET `/api/pedidos/meus` 🔒
-* GET `/api/pedidos/:id` 🔒
-* POST `/api/pedidos` 🔒
+* GET `/api/pedidos`
+* GET `/api/pedidos/meus`
+* GET `/api/pedidos/:id`
+* POST `/api/pedidos`
 
----
+## Regras de negocio
 
-# 🧪 Testes (Opcional - Conceito A)
+* Nao permite estoque negativo
+* Nao permite preco negativo
+* Nao permite pedido sem itens
+* Nao permite comprar mais que o estoque
+* Atualiza estoque automaticamente
+* Calcula total do pedido
+* Mantem historico de preco no pedido
 
-Para rodar testes:
+## Autor
 
-```bash
-npm install -D jest ts-jest @types/jest
-```
-
----
-
-# 🧠 Conceitos aplicados
-
-## ✔ Conceito C
-
-* CRUD completo
-* API REST
-* Status HTTP corretos
-* Arquitetura em camadas
-
-## ✔ Conceito B
-
-* Relacionamento entre entidades
-* Autenticação JWT
-* Segurança com bcrypt
-* Estrutura organizada
-
-## ✔ Conceito A
-
-* Upload de imagem (mídia)
-* Regras de negócio completas
-* Tratamento de erros
-* Sistema de pedidos (e-commerce)
-
----
-
-# 👨‍💻 Autor
-
-Gabriel Menezes Rehbein
-Bruno Beheregaray
+Gabriel Menezes Rehbein  
+Bruno Beheregaray  
 GitHub: https://github.com/Gabriel-Rehbein
-
----
-
-# 📌 Status
-
-✅ Projeto completo
-🔥 Nível: Conceito A
