@@ -1,21 +1,21 @@
 import { RefreshCw } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CategoryCard } from "../components/CategoryCard";
 import { CategoryTable } from "../components/CategoryTable";
 import { StatusMessage } from "../components/StatusMessage";
-import { deletarCategoria, listarCategorias } from "../services/api";
+import { deletarCategoria, isUnauthorizedError, listarCategorias } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import type { Categoria } from "../services/api";
 
 export function CategoryListPage() {
-  const { token, isAuthenticated } = useAuth();
+  const { token, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [erro, setErro] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
-  async function carregarCategorias() {
+  const carregarCategorias = useCallback(async () => {
     setIsLoading(true);
     setErro("");
 
@@ -27,7 +27,7 @@ export function CategoryListPage() {
     } finally {
       setIsLoading(false);
     }
-  }
+  }, []);
 
   async function handleDeleteCategoria(categoria: Categoria) {
     if (!window.confirm(`Deseja excluir a categoria “${categoria.nome}”?`)) {
@@ -41,14 +41,22 @@ export function CategoryListPage() {
       await deletarCategoria(token, categoria.id);
       await carregarCategorias();
     } catch (error) {
+      if (isUnauthorizedError(error)) {
+        logout();
+      }
+
       setErro(error instanceof Error ? error.message : "Erro ao excluir categoria");
       setIsLoading(false);
     }
   }
 
   useEffect(() => {
-    carregarCategorias();
-  }, []);
+    const timeoutId = window.setTimeout(() => {
+      void carregarCategorias();
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [carregarCategorias]);
 
   return (
     <main className="page">

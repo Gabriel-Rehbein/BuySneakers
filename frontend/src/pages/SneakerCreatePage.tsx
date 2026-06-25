@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 import { SneakerForm } from "../components/SneakerForm";
 import { StatusMessage } from "../components/StatusMessage";
 import { useAuth } from "../context/AuthContext";
-import { criarTenis, listarCategorias } from "../services/api";
+import { criarTenis, isUnauthorizedError, listarCategorias } from "../services/api";
 import type { Categoria } from "../services/api";
 
 export function SneakerCreatePage() {
-  const { token, isAuthenticated } = useAuth();
+  const { token, isAuthenticated, logout } = useAuth();
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [mensagem, setMensagem] = useState("");
   const [erro, setErro] = useState("");
@@ -28,6 +28,10 @@ export function SneakerCreatePage() {
       const tenis = await criarTenis(token, dados);
       setMensagem(`Tênis "${tenis.nome}" cadastrado com sucesso.`);
     } catch (error) {
+      if (isUnauthorizedError(error)) {
+        logout();
+      }
+
       setErro(error instanceof Error ? error.message : "Erro ao cadastrar tênis");
     }
   }

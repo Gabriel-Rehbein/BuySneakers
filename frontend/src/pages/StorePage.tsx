@@ -1,10 +1,10 @@
 import { RefreshCw, Search, X } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { SneakerCard } from "../components/SneakerCard";
 import { StatusMessage } from "../components/StatusMessage";
 import { useAuth } from "../context/AuthContext";
-import { criarPedido, listarMeusPedidos, listarTenis } from "../services/api";
+import { criarPedido, isUnauthorizedError, listarMeusPedidos, listarTenis } from "../services/api";
 import type { Pedido, Tenis } from "../services/api";
 
 function formatarMoeda(valor: number | string) {
@@ -15,7 +15,7 @@ function formatarMoeda(valor: number | string) {
 }
 
 export function StorePage() {
-  const { token, isAuthenticated } = useAuth();
+  const { token, isAuthenticated, logout } = useAuth();
   const [tenis, setTenis] = useState<Tenis[]>([]);
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
   const [quantidades, setQuantidades] = useState<Record<number, number>>({});
@@ -41,15 +41,26 @@ export function StorePage() {
     );
   }, [tenis, termoBusca]);
 
-  async function carregarDados() {
+  const carregarDados = useCallback(async () => {
     setIsLoading(true);
     setErro("");
 
     try {
-      const [tenisCarregados, pedidosCarregados] = await Promise.all([
-        listarTenis(),
-        isAuthenticated ? listarMeusPedidos(token) : Promise.resolve([]),
-      ]);
+      const tenisCarregados = await listarTenis();
+      let pedidosCarregados: Pedido[] = [];
+
+      if (isAuthenticated) {
+        try {
+          pedidosCarregados = await listarMeusPedidos(token);
+        } catch (error) {
+          if (!isUnauthorizedError(error)) {
+            throw error;
+          }
+
+          logout();
+          setErro("Sua sessão expirou. Entre novamente para ver seus pedidos.");
+        }
+      }
 
       setTenis(tenisCarregados);
       setPedidos(pedidosCarregados);
@@ -65,11 +76,15 @@ export function StorePage() {
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [isAuthenticated, logout, token]);
 
   useEffect(() => {
-    carregarDados();
-  }, [isAuthenticated, token]);
+    const timeoutId = window.setTimeout(() => {
+      void carregarDados();
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [carregarDados]);
 
   function alterarQuantidade(tenisId: number, quantidade: number) {
     const item = tenis.find((produto) => produto.id === tenisId);
@@ -97,6 +112,10 @@ export function StorePage() {
       setMensagem(`Pedido #${pedido.id} criado com sucesso.`);
       await carregarDados();
     } catch (error) {
+      if (isUnauthorizedError(error)) {
+        logout();
+      }
+
       setErro(error instanceof Error ? error.message : "Erro ao criar pedido");
     }
   }

@@ -2,11 +2,11 @@ import { Link } from "react-router-dom";
 import { CategoryForm } from "../components/CategoryForm";
 import { StatusMessage } from "../components/StatusMessage";
 import { useAuth } from "../context/AuthContext";
-import { criarCategoria } from "../services/api";
+import { criarCategoria, isUnauthorizedError } from "../services/api";
 import { useState } from "react";
 
 export function CategoryCreatePage() {
-  const { token, isAuthenticated } = useAuth();
+  const { token, isAuthenticated, logout } = useAuth();
   const [mensagem, setMensagem] = useState("");
   const [erro, setErro] = useState("");
 
@@ -18,6 +18,10 @@ export function CategoryCreatePage() {
       const categoria = await criarCategoria(token, dados);
       setMensagem(`Categoria "${categoria.nome}" cadastrada com sucesso.`);
     } catch (error) {
+      if (isUnauthorizedError(error)) {
+        logout();
+      }
+
       setErro(error instanceof Error ? error.message : "Erro ao cadastrar categoria");
     }
   }

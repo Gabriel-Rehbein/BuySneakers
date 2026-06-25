@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { CategoryForm } from "../components/CategoryForm";
 import { StatusMessage } from "../components/StatusMessage";
-import { buscarCategoriaPorId, atualizarCategoria } from "../services/api";
+import { buscarCategoriaPorId, atualizarCategoria, isUnauthorizedError } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import type { Categoria } from "../services/api";
 
 export function CategoryEditPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { token, isAuthenticated } = useAuth();
+  const { token, isAuthenticated, logout } = useAuth();
   const [categoria, setCategoria] = useState<Categoria | null>(null);
   const [erro, setErro] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -49,6 +49,10 @@ export function CategoryEditPage() {
       await atualizarCategoria(token, Number(id), dados);
       navigate("/categorias");
     } catch (error) {
+      if (isUnauthorizedError(error)) {
+        logout();
+      }
+
       setErro(error instanceof Error ? error.message : "Erro ao atualizar categoria");
     }
   }

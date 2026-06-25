@@ -10,7 +10,14 @@ export class PedidoRepository {
   }
 
   async inserir(pedido: Pedido): Promise<Pedido> {
-    return this.repository.save(pedido);
+    const pedidoSalvo = await this.repository.save(pedido);
+    const pedidoCompleto = await this.buscarPorId(pedidoSalvo.id);
+
+    if (!pedidoCompleto) {
+      throw new Error("500|Pedido criado, mas não foi possível carregá-lo");
+    }
+
+    return pedidoCompleto;
   }
 
   async listar(): Promise<Pedido[]> {

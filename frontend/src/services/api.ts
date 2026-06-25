@@ -44,6 +44,20 @@ type ApiSingleResponse<T> = {
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3000/api";
 export const API_BASE_URL = API_URL.replace(/\/api\/?$/, "");
 
+export class ApiError extends Error {
+  status: number;
+
+  constructor(message: string, status: number) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+  }
+}
+
+export function isUnauthorizedError(error: unknown) {
+  return error instanceof ApiError && error.status === 401;
+}
+
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const isFormData = options.body instanceof FormData;
   const headers = new Headers(options.headers);
@@ -63,7 +77,10 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     : null;
 
   if (!response.ok) {
-    throw new Error(body?.erro ?? "Não foi possível completar a solicitação");
+    throw new ApiError(
+      body?.erro ?? "Não foi possível completar a solicitação",
+      response.status
+    );
   }
 
   return body as T;
