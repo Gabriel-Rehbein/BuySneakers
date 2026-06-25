@@ -27,6 +27,19 @@ export class PedidoService {
     }
   }
 
+  private async buscarPedidoDoUsuario(pedidoId: number, usuarioId: number): Promise<Pedido> {
+    this.validarId(pedidoId, "Pedido");
+    this.validarId(usuarioId, "Usuário");
+
+    const pedido = await this.buscarPorId(pedidoId);
+
+    if (pedido.usuario.id !== usuarioId) {
+      throw new Error("403|Você não pode alterar este pedido");
+    }
+
+    return pedido;
+  }
+
   async criar(dados: PedidoInput): Promise<Pedido> {
     this.validarId(dados.usuarioId, "Usuário");
 
@@ -113,12 +126,52 @@ export class PedidoService {
     return this.pedidoRepository.atualizar(id, pedidoExistente);
   }
 
-  async deletar(id: number): Promise<void> {
-    this.validarId(id, "Pedido");
+  async atualizarQuantidadeItem(
+    pedidoId: number,
+    itemId: number,
+    usuarioId: number,
+    quantidade: number
+  ): Promise<Pedido> {
+    this.validarId(itemId, "Item do pedido");
 
-    await this.buscarPorId(id);
+    if (!Number.isInteger(quantidade) || quantidade <= 0) {
+      throw new Error("400|Quantidade inválida");
+    }
 
-    // Talvez restaurar estoque, mas para simplicidade, apenas deletar
+    const pedido = await this.buscarPedidoDoUsuario(pedidoId, usuarioId);
+    const item = pedido.itens?.find((itemPedido) => itemPedido.id === itemId);
+
+    if (!item) {
+      throw new Error("404|Item do pedido não encontrado");
+    }
+
+    const diferenca = quantidade - item.quantidade;
+
+    if (diferenca > 0 && item.tenis.estoque < diferenca) {
+      throw new Error(`400|Estoque insuficiente para o tênis ${item.tenis.nome}`);
+    }
+
+    item.tenis.estoque -= diferenca;
+    await this.tenisRepository.atualizar(item.tenis.id, item.tenis);
+
+    item.quantidade = quantidade;
+    item.subtotal = Number(item.precoUnitario) * quantidade;
+    pedido.total =
+      pedido.itens?.reduce((total, itemPedido) => total + Number(itemPedido.subtotal), 0) ?? 0;
+
+    return this.pedidoRepository.atualizar(pedido.id, pedido);
+  }
+
+  async deletar(id: number, usuarioId?: number): Promise<void> {
+    const pedido = usuarioId
+      ? await this.buscarPedidoDoUsuario(id, usuarioId)
+      : await this.buscarPorId(id);
+
+    for (const item of pedido.itens ?? []) {
+      item.tenis.estoque += item.quantidade;
+      await this.tenisRepository.atualizar(item.tenis.id, item.tenis);
+    }
+
     await this.pedidoRepository.deletar(id);
   }
 }

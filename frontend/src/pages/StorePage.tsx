@@ -1,10 +1,17 @@
-import { RefreshCw, Search, X } from "lucide-react";
+import { Minus, Plus, RefreshCw, Search, Trash2, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { SneakerCard } from "../components/SneakerCard";
 import { StatusMessage } from "../components/StatusMessage";
 import { useAuth } from "../context/AuthContext";
-import { criarPedido, isUnauthorizedError, listarMeusPedidos, listarTenis } from "../services/api";
+import {
+  atualizarQuantidadeItemPedido,
+  criarPedido,
+  deletarPedido,
+  isUnauthorizedError,
+  listarMeusPedidos,
+  listarTenis,
+} from "../services/api";
 import type { Pedido, Tenis } from "../services/api";
 
 function formatarMoeda(valor: number | string) {
@@ -22,6 +29,7 @@ export function StorePage() {
   const [erro, setErro] = useState("");
   const [mensagem, setMensagem] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [pedidoEmAtualizacao, setPedidoEmAtualizacao] = useState<number | null>(null);
   const [termoBusca, setTermoBusca] = useState("");
 
   const totalEstoque = useMemo(
@@ -117,6 +125,56 @@ export function StorePage() {
       }
 
       setErro(error instanceof Error ? error.message : "Erro ao criar pedido");
+    }
+  }
+
+  async function alterarQuantidadePedido(
+    pedido: Pedido,
+    item: NonNullable<Pedido["itens"]>[number],
+    quantidade: number
+  ) {
+    if (quantidade <= 0) return;
+
+    setMensagem("");
+    setErro("");
+    setPedidoEmAtualizacao(pedido.id);
+
+    try {
+      await atualizarQuantidadeItemPedido(token, pedido.id, item.id, quantidade);
+      setMensagem(`Pedido #${pedido.id} atualizado.`);
+      await carregarDados();
+    } catch (error) {
+      if (isUnauthorizedError(error)) {
+        logout();
+      }
+
+      setErro(error instanceof Error ? error.message : "Erro ao atualizar pedido");
+    } finally {
+      setPedidoEmAtualizacao(null);
+    }
+  }
+
+  async function excluirPedido(pedido: Pedido) {
+    if (!window.confirm(`Deseja excluir o pedido #${pedido.id}?`)) {
+      return;
+    }
+
+    setMensagem("");
+    setErro("");
+    setPedidoEmAtualizacao(pedido.id);
+
+    try {
+      await deletarPedido(token, pedido.id);
+      setMensagem(`Pedido #${pedido.id} excluído.`);
+      await carregarDados();
+    } catch (error) {
+      if (isUnauthorizedError(error)) {
+        logout();
+      }
+
+      setErro(error instanceof Error ? error.message : "Erro ao excluir pedido");
+    } finally {
+      setPedidoEmAtualizacao(null);
     }
   }
 
@@ -234,11 +292,66 @@ export function StorePage() {
           <div className="orders-list">
             {pedidos.slice(0, 4).map((pedido) => (
               <article className="order-item" key={pedido.id}>
-                <div>
-                  <strong>Pedido #{pedido.id}</strong>
-                  <p className="muted">
-                    {(pedido.itens ?? []).map((item) => item.tenis.nome).join(", ") || "Sem itens"}
-                  </p>
+                <div className="order-main">
+                  <div className="order-heading">
+                    <div>
+                      <strong>Pedido #{pedido.id}</strong>
+                      <p className="muted">
+                        {new Date(pedido.dataCriacao).toLocaleDateString("pt-BR")}
+                      </p>
+                    </div>
+                    <button
+                      className="icon-button danger-button"
+                      type="button"
+                      title="Excluir pedido"
+                      onClick={() => excluirPedido(pedido)}
+                      disabled={pedidoEmAtualizacao === pedido.id}
+                    >
+                      <Trash2 size={16} aria-hidden="true" />
+                    </button>
+                  </div>
+
+                  <div className="order-items">
+                    {(pedido.itens ?? []).map((item) => {
+                      const maxQuantidade = item.quantidade + item.tenis.estoque;
+                      const desabilitado = pedidoEmAtualizacao === pedido.id;
+
+                      return (
+                        <div className="order-product" key={item.id}>
+                          <div>
+                            <strong>{item.tenis.nome}</strong>
+                            <p className="muted">{formatarMoeda(item.precoUnitario)} cada</p>
+                          </div>
+
+                          <div className="quantity-control" aria-label={`Quantidade de ${item.tenis.nome}`}>
+                            <button
+                              className="icon-button"
+                              type="button"
+                              title="Diminuir"
+                              onClick={() =>
+                                alterarQuantidadePedido(pedido, item, item.quantidade - 1)
+                              }
+                              disabled={desabilitado || item.quantidade <= 1}
+                            >
+                              <Minus size={16} aria-hidden="true" />
+                            </button>
+                            <span>{item.quantidade}</span>
+                            <button
+                              className="icon-button"
+                              type="button"
+                              title="Aumentar"
+                              onClick={() =>
+                                alterarQuantidadePedido(pedido, item, item.quantidade + 1)
+                              }
+                              disabled={desabilitado || item.quantidade >= maxQuantidade}
+                            >
+                              <Plus size={16} aria-hidden="true" />
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
                 <strong>{formatarMoeda(pedido.total)}</strong>
               </article>

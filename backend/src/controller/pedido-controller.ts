@@ -101,10 +101,28 @@ export class PedidoController {
     }
   };
 
+  atualizarQuantidadeItem = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const pedido = await this.service.atualizarQuantidadeItem(
+        Number(req.params.id),
+        Number(req.params.itemId),
+        Number(req.usuario?.id),
+        Number(req.body.quantidade)
+      );
+
+      res.status(200).json({
+        mensagem: "Item do pedido atualizado com sucesso",
+        dados: pedido,
+      });
+    } catch (erro) {
+      this.tratarErro(res, erro);
+    }
+  };
+
   deletar = async (req: Request, res: Response): Promise<void> => {
     try {
       const id = Number(req.params.id);
-      await this.service.deletar(id);
+      await this.service.deletar(id, Number(req.usuario?.id));
       res.status(204).send();
     } catch (erro) {
       this.tratarErro(res, erro);

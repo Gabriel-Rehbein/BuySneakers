@@ -129,6 +129,17 @@ a {
   border-color: #9fc9bd;
 }
 
+.danger-button {
+  color: #842029;
+  border-color: #f1b8be;
+}
+
+.danger-button:hover {
+  color: #6d1a22;
+  border-color: #e69099;
+  background: #fff5f6;
+}
+
 .page {
   width: min(1120px, calc(100% - 40px));
   margin: 0 auto;
@@ -594,7 +605,7 @@ h1 {
 
 .order-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
   padding: 16px 20px;
@@ -603,6 +614,38 @@ h1 {
 
 .order-item:last-child {
   border-bottom: 0;
+}
+
+.order-main {
+  display: grid;
+  gap: 14px;
+  flex: 1;
+  min-width: 0;
+}
+
+.order-heading,
+.order-product {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.order-heading .muted,
+.order-product .muted {
+  margin: 4px 0 0;
+}
+
+.order-items {
+  display: grid;
+  gap: 10px;
+}
+
+.order-product {
+  padding: 12px;
+  border: 1px solid #eef2f7;
+  border-radius: 8px;
+  background: #f8fafc;
 }
 
 .panel-meta {
@@ -721,5 +764,16 @@ h1 {
 
   .search-count {
     white-space: normal;
+  }
+
+  .order-item,
+  .order-heading,
+  .order-product {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .order-product .quantity-control {
+    justify-content: stretch;
   }
 }

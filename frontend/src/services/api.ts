@@ -178,6 +178,35 @@ export async function listarMeusPedidos(token: string) {
   return response.dados;
 }
 
+export async function atualizarQuantidadeItemPedido(
+  token: string,
+  pedidoId: number,
+  itemId: number,
+  quantidade: number
+) {
+  const response = await request<ApiSingleResponse<Pedido>>(
+    `/pedidos/${pedidoId}/itens/${itemId}`,
+    {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ quantidade }),
+    }
+  );
+
+  return response.dados;
+}
+
+export async function deletarPedido(token: string, id: number) {
+  await request<void>(`/pedidos/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
 export async function registrarUsuario(dados: {
   nome: string;
   email: string;

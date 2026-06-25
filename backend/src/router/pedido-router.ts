@@ -9,6 +9,11 @@ export const pedidoRotas = (controller: PedidoController): Router => {
   router.get("/meus", authMiddleware, controller.meusPedidos.bind(controller));
   router.get("/:id", authMiddleware, controller.buscarPorId.bind(controller));
   router.post("/", authMiddleware, controller.criar.bind(controller));
+  router.patch(
+    "/:id/itens/:itemId",
+    authMiddleware,
+    controller.atualizarQuantidadeItem.bind(controller)
+  );
   router.put("/:id", authMiddleware, controller.atualizar.bind(controller));
   router.patch("/:id", authMiddleware, controller.partialUpdate.bind(controller));
   router.delete("/:id", authMiddleware, controller.deletar.bind(controller));
